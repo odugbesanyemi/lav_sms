@@ -2,32 +2,32 @@
 @section('page_title', 'Manage Payments')
 @section('content')
 
-    <div class="card">
-        <div class="card-header header-elements-inline">
-            <h5 class="card-title"><i class="icon-cash2 mr-2"></i> Select year</h5>
+    <div class="card shadow-none">
+        <div class="card-header header-elements-inline py-3 bg-body-tertiary text-dark">
+            <h5 class="card-title"><i class="icon-cash2 mr-2 "></i> Select year</h5>
             {!! Qs::getPanelOptions() !!}
         </div>
 
         <div class="card-body">
             <form method="post" action="{{ route('payments.select_year') }}">
                 @csrf
-                <div class="row">
-                    <div class="col-md-6 offset-md-3">
-                        <div class="row">
-                            <div class="col-md-10">
-                                <div class="form-group">
-                                    <label for="year" class="col-form-label font-weight-bold">Select Year <span class="text-danger">*</span></label>
-                                    <select data-placeholder="Select Year" required id="year" name="year" class="form-control select">
+                <div class="">
+                    <div class="md:w-7/12 mx-auto">
+                    <label for="year" class="col-form-label font-weight-bold">Select Year <span class="text-danger">*</span></label>
+                        <div class="flex items-center gap-3 justify-between">
+                            <div class="flex-1">
+                                <div class="">
+                                    <select data-placeholder="Select Year" required id="year" name="year" class=" select w-full">
                                         @foreach($years as $yr)
-                                            <option {{ ($selected && $year == $yr->year) ? 'selected' : '' }} value="{{ $yr->year }}">{{ $yr->year }}</option>
+                                            <option {{ ($selected && $year == $yr->id) ? 'selected' : '' }} value="{{ $yr->id }}">{{ $yr->title }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                             </div>
 
-                            <div class="col-md-2 mt-4">
-                                <div class="text-right mt-1">
-                                    <button type="submit" class="btn btn-primary">Submit <i class="icon-paperplane ml-2"></i></button>
+                            <div class="">
+                                <div class="">
+                                    <button type="submit" class="btn btn-primary w-full">Submit <i class="icon-paperplane ml-2"></i></button>
                                 </div>
                             </div>
 
@@ -42,7 +42,7 @@
 @if($selected)
     <div class="card">
         <div class="card-header header-elements-inline">
-            <h6 class="card-title">Manage Payments for {{ $year }} Session</h6>
+            <h6 class="card-title">Manage Payments for {{ Qs::findAcademicYearById($year)[0]->title }} Session</h6>
             {!! Qs::getPanelOptions() !!}
         </div>
 
@@ -53,15 +53,15 @@
                     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Class Payments</a>
                     <div class="dropdown-menu dropdown-menu-right">
                         @foreach($my_classes as $mc)
-                            <a href="#pc-{{ $mc->id }}" class="dropdown-item" data-toggle="tab">{{ $mc->name }}</a>
+                            <a href="#pc-{{ $mc->id }}" class="dropdown-item" data-toggle="tab">{{ $mc->title }}</a>
                         @endforeach
                     </div>
                 </li>
             </ul>
 
             <div class="tab-content">
-                    <div class="tab-pane fade show active" id="all-payments">
-                        <table class="table datatable-button-html5-columns">
+                    <div class="tab-pane fade show active overflow-x-auto" id="all-payments">
+                        <table class="table table-auto filterable-table">
                             <thead>
                             <tr>
                                 <th>#</th>
@@ -81,7 +81,7 @@
                                     <td>{{ $p->title }}</td>
                                     <td>{{ $p->amount }}</td>
                                     <td>{{ $p->ref_no }}</td>
-                                    <td>{{ $p->my_class_id ? $p->my_class->name : '' }}</td>
+                                    <td>{{ $p->my_class_id ? $p->my_class->title : '' }}</td>
                                     <td>{{ ucwords($p->method) }}</td>
                                     <td>{{ $p->description }}</td>
                                     <td class="text-center">
@@ -109,8 +109,8 @@
                     </div>
 
                 @foreach($my_classes as $mc)
-                    <div class="tab-pane fade" id="pc-{{ $mc->id }}">
-                        <table class="table datatable-button-html5-columns">
+                    <div class="tab-pane fade overflow-x-auto" id="pc-{{ $mc->id }}">
+                        <table class="table table-auto">
                             <thead>
                             <tr>
                                 <th>#</th>

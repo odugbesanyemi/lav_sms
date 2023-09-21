@@ -1,13 +1,13 @@
 {{--Manage Settings--}}
 <li class="nav-item">
-    <a href="{{ route('settings') }}" class="nav-link {{ in_array(Route::currentRouteName(), ['settings',]) ? 'active' : '' }}"><i class="icon-gear"></i> <span>Settings</span></a>
+    <a href="{{ route('settings') }}" class="nav-link {{ in_array(Route::currentRouteName(), ['settings',]) ? 'active' : '' }}"><iconify-icon icon="carbon:settings-adjust"></iconify-icon> <span>Settings</span></a>
 </li>
 
 {{--Pins--}}
 <li class="nav-item nav-item-submenu {{ in_array(Route::currentRouteName(), ['pins.create', 'pins.index']) ? 'nav-item-expanded nav-item-open' : '' }} ">
-    <a href="#" class="nav-link"><i class="icon-lock2"></i> <span> Pins</span></a>
+    <a href="#" class="nav-link"><iconify-icon icon="carbon:unlocked"></iconify-icon> <span> Pins</span></a>
 
-    <ul class="nav nav-group-sub" data-submenu-title="Manage Pins">
+    <ul class="nav-group-sub" data-submenu-title="Manage Pins">
         {{--Generate Pins--}}
             <li class="nav-item">
                 <a href="{{ route('pins.create') }}"

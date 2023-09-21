@@ -7,13 +7,14 @@ use App\Models\ExamRecord;
 use App\Models\Grade;
 use App\Models\Mark;
 use App\Models\Skill;
+use Qs;
 
 class ExamRepo
 {
 
     public function all()
     {
-        return Exam::orderBy('name', 'asc')->orderBy('year', 'desc')->get();
+        return Exam::where(['school_id'=>Qs::findActiveSchool()[0]->id,'acad_year_id'=>Qs::getActiveAcademicYear()[0]->id])->orderBy('name', 'asc')->get();
     }
 
     public function getExam($data)
@@ -65,7 +66,7 @@ class ExamRepo
 
     public function allGrades()
     {
-        return Grade::orderBy('name')->get();
+        return Grade::where(['school_id'=>Qs::findActiveSchool()[0]->id])->orderBy('name')->get();
     }
 
     public function getGrade($data)
@@ -112,7 +113,7 @@ class ExamRepo
 
     public function getExamYears($student_id)
     {
-        return Mark::where('student_id', $student_id)->select('year')->distinct()->get();
+        return Mark::where('student_id', $student_id)->select('acad_year_id')->distinct()->get();
     }
 
     public function getMark($data)
@@ -124,14 +125,14 @@ class ExamRepo
 
     public function getSkill($where)
     {
-        return Skill::where($where)->orderBy('name')->get();
+        return Skill::where($where)->orderBy('skill_type')->get();
     }
 
     public function getSkillByClassType($class_type = NULL, $skill_type = NULL)
     {
         return ($skill_type)
-            ? $this->getSkill(['class_type' => $class_type, 'skill_type' => $skill_type])
-            : $this->getSkill(['class_type' => $class_type]);
+            ? $this->getSkill(['class_type' => $class_type, 'skill_type' => $skill_type,'school_id'=>Qs::findActiveSchool()[0]->id])
+            : $this->getSkill(['class_type' => $class_type,'school_id'=>Qs::findActiveSchool()[0]->id]);
     }
 
 }

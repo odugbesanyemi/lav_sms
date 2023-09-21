@@ -2,8 +2,8 @@
 @section('page_title', 'Edit Dorm - '.$dorm->name)
 @section('content')
 
-    <div class="card">
-        <div class="card-header header-elements-inline">
+    <div class="card shadow-none">
+        <div class="card-header header-elements-inline py-3 bg-body-tertiary text-secondary">
             <h6 class="card-title">Edit Dorm</h6>
             {!! Qs::getPanelOptions() !!}
         </div>

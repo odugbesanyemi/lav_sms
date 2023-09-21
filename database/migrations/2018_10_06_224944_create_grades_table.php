@@ -15,6 +15,7 @@ class CreateGradesTable extends Migration
     {
         Schema::create('grades', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('school_id');
             $table->string('name', 40);
             $table->unsignedInteger('class_type_id')->nullable();
             $table->tinyInteger('mark_from');

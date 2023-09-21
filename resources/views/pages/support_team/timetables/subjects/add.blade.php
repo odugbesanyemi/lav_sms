@@ -1,5 +1,5 @@
 <div class="tab-pane fade" id="add-sub">
-    <div class="col-md-8">
+    <div class="col-md-12">
         <form class="ajax-store" method="post" action="{{ route('tt.store') }}">
             @csrf <input name="ttr_id" value="{{ $ttr->id }}" type="hidden">
 

@@ -1,16 +1,34 @@
-<div id="page-header" class="page-header page-header-light">
+<style>
+    .transition{
+        transition: all .4s ease;
+        z-index: 100;
+    }
+</style>
+<div id="page-header" class="bg-body-secondary text-dark py-2 position-sticky top-0">
     <div class="page-header-content header-elements-md-inline">
-        <div class="page-title d-flex">
-            <h4><i class="icon-plus-circle2 mr-2"></i> <span class="font-weight-semibold">@yield('page_title')</span></h4>
-            <a href="#" class="header-elements-toggle text-default d-md-none"><i class="icon-more"></i></a>
+        <div class="m-0 py-2 d-flex border-md-0">
+            <h5 class="m-0"><i class="icon-plus-circle2 mr-2"></i> <span class="font-weight-semibold">@yield('page_title')</span></h5>
+            <a href="#headerCollapse" id="menu-toggle" role="button" aria-expanded="false" aria-controls="collapseExample" data-toggle="collapse" class="header-elements-toggle text-default d-md-none"><i class="icon-more"></i></a>
         </div>
 
-        <div class="header-elements d-none">
-            <div class="d-flex justify-content-center">
-   {{--             <a href="#" class="btn btn-link btn-float text-default"><i class="icon-bars-alt text-primary"></i><span>Statistics</span></a>
-                <a href="#" class="btn btn-link btn-float text-default"><i class="icon-calculator text-primary"></i> <span>Invoices</span></a>
-                <a href="#" class="btn btn-link btn-float text-default"><i class="icon-calendar5 text-primary"></i> <span>Schedule</span></a>--}}
-                <a href="{{ Qs::userIsSuperAdmin() ? route('settings') : '' }}" class="btn btn-link btn-float text-default"><i class="icon-arrow-down7 text-primary"></i> <span class="font-weight-semibold">Current Session: {{ Qs::getSetting('current_session') }}</span></a>
+        <div class="d-md-block d-none" id="menu-collapse">
+            <div  class="d-flex align-items-center flex-column flex-md-row py-1">
+                <form action="" class="w-100 pr-0 pr-md-2 mb-1 mb-md-0">
+                    <select onchange="changeSchool(this.value)" name="" id="" class="d-flex  form-control " style="width: 100% !important;">
+                        @foreach (Qs::getSchools() as $sl )
+                        @if (Qs::getSchools()->count() == 0)
+                            <option>No Registered School</option>
+                        @endif
+                        <option {{ $sl->active == 1 ? 'selected=true': ""}}  value="{{ $sl->id }}">{{$sl->name}}</option>
+                        @endforeach
+                    </select>
+                </form>
+                <select  onchange="changeAcademicYear(this.value)" name="" class="d-flex  form-control " id="">
+                    @foreach (Qs::getAllAcademicYear() as $ayear )
+                        <option {{ $ayear->default==1?'selected=true':"" }} value="{{ $ayear->id }}">{{$ayear->title}}</option>
+                    @endforeach
+                </select>
+                <!-- <a href="{{ Qs::userIsSuperAdmin() ? route('settings') : '' }}" class="btn btn-link text-default d-flex w-100 border rounded"> <span class="font-weight-semibold">Session: {{ Qs::getSetting('current_session') }}</span></a> -->
             </div>
         </div>
     </div>
@@ -51,4 +69,42 @@
             </div>
         </div>
     </div>--}}
+
+    <script>
+        $(document).ready()
+        {
+            var sidebar = $('#sidebar-collapsible')
+
+            var sidebarToggler = $('#sidebar-toggle')
+            var toggler = $('#menu-toggle')
+            var collapsible = $('#menu-collapse')
+            toggler.click(()=>{
+                collapsible.toggleClass('d-none transition-all')
+            })
+            sidebarToggler.click(()=>{
+                sidebar.toggleClass('d-none transition-all')
+            })
+        }
+        function changeSchool(id)
+        {
+
+            $.ajax({
+                dataType:'json',
+                url:`/setup/change-school/${id}`,
+                success:function(){
+                 location.href=(`/`)
+                }
+            })
+        }
+
+        function changeAcademicYear(id){
+            $.ajax({
+                dataType:'json',
+                url:`/setup/change-academic-year/${id}`,
+                success:function(){
+                 location.href=(`/`)
+                }
+            })
+        }
+    </script>
 </div>

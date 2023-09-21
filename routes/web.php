@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Resource;
+
 Auth::routes();
 
 //Route::get('/test', 'TestController@index')->name('test');
@@ -7,11 +9,49 @@ Route::get('/privacy-policy', 'HomeController@privacy_policy')->name('privacy_po
 Route::get('/terms-of-use', 'HomeController@terms_of_use')->name('terms_of_use');
 
 
+
 Route::group(['middleware' => 'auth'], function () {
 
     Route::get('/', 'HomeController@dashboard')->name('home');
     Route::get('/home', 'HomeController@dashboard')->name('home');
     Route::get('/dashboard', 'HomeController@dashboard')->name('dashboard');
+
+    Route::group(['prefix' => 'setup'], function()
+    {
+        Route::get('marking-period','setupController@marking_period')->name('setup.marking-period');
+        Route::get('calendar','setupController@calendar')->name('setup.calendar');
+        Route::get('periods','setupController@periods')->name('setup.periods');
+        Route::get('grade-levels','setupController@grade_levels')->name('setup.grade-levels');
+        Route::get('classrooms','setupController@classrooms')->name('setup.classrooms');
+        Route::get('change-school/{school_id}','setupController@change_school_active')->name('setup.change-school');
+        Route::get('change-academic-year/{academic_year_id}','setupController@change_academic_year_active')->name('setup.change-academic-year-active');
+        Route::get('ajax/getSemesterQuarters/{sem_id}','setupController@get_semester_quarters')->name('setup.get-semester-quarters');
+        Route::get('ajax/marking-period/{mp_id}','setupController@getMarkingPeriod');
+        Route::post('edit_marking_period','setupController@MarkingPeriodEdit')->name('setup.edit-marking-period');
+        Route::post('marking-periods/new','setupController@addMarkingPeriod')->name('setup.marking-periods-new');
+        Route::post('class-periods/new','setupController@addClassPeriod');
+        Route::post('class-periods/update/{period_id}','setupController@updateClassPeriod');
+        Route::delete('class-periods/delete/{period_id}','setupController@deleteClassPeriod');
+        Route::post('grade-levels/add','setupController@addGradeLevels');
+        Route::post('grade-levels/update/{grade_id}','setupController@updateGradeLevels');
+        Route::post('grade-levels/delete/{grade_id}','setupController@deleteGradeLevels');
+        Route::post('classrooms/add','setupController@addClassrooms');
+        Route::post('classrooms/update/{room_id}','setupController@updateClassrooms');
+        Route::post('classrooms/delete/{room_id}','setupController@deleteClassrooms');
+        Route::group(['prefix'=>'calendar'],function(){
+            Route::post('save-academic-year','setupController@saveAcademicYear')->name('setup.calendar.save-academic-year');
+            Route::post('create-event','setupController@createCalendarEvents')->name('setup.calendar.create-event');
+        });
+        Route::group(['prefix'=> 'schools'], function(){
+            Route::get('create','setupController@create_school')->name('setup.schools.create');
+            Route::get('/','setupController@school_info')->name('setup.schools');
+            Route::get('preferences','setupController@school_preferences')->name('setup.schools.preferences');
+            Route::post('new','setupController@school_store')->name('setup.schools.new');
+            Route::delete('remove/{id}','setupController@remove_school')->name('setup.schools.remove');
+            Route::post('update/{school_id}','setupController@update_school')->name('setup.schools.update');
+            Route::post('update_school_preference/{key}/{value}','setupController@update_school_preference')->name('setup.schools.update_preference');
+        });
+    });
 
     Route::group(['prefix' => 'my_account'], function() {
         Route::get('/', 'MyAccountController@edit_profile')->name('my_account');
@@ -84,7 +124,7 @@ Route::group(['middleware' => 'auth'], function () {
         /*************** Payments *****************/
         Route::group(['prefix' => 'payments'], function(){
 
-            Route::get('manage/{class_id?}', 'PaymentController@manage')->name('payments.manage');
+            Route::get('manage/{class_id?}','PaymentController@manage')->name('payments.manage');
             Route::get('invoice/{id}/{year?}', 'PaymentController@invoice')->name('payments.invoice');
             Route::get('receipts/{id}', 'PaymentController@receipts')->name('payments.receipts');
             Route::get('pdf_receipts/{id}', 'PaymentController@pdf_receipts')->name('payments.pdf_receipts');
@@ -93,6 +133,8 @@ Route::group(['middleware' => 'auth'], function () {
             Route::delete('reset_record/{id}', 'PaymentController@reset_record')->name('payments.reset_record');
             Route::post('pay_now/{id}', 'PaymentController@pay_now')->name('payments.pay_now');
         });
+
+        /*************** schools *****************/
 
         /*************** Pins *****************/
         Route::group(['prefix' => 'pins'], function(){
@@ -126,17 +168,42 @@ Route::group(['middleware' => 'auth'], function () {
                 Route::post('selector', 'MarkController@selector')->name('marks.selector');
                 Route::get('bulk/{class?}/{section?}', 'MarkController@bulk')->name('marks.bulk');
                 Route::post('bulk', 'MarkController@bulk_select')->name('marks.bulk_select');
+                Route::group(['prefix'=>'setup'],function(){
+                    Route::get('manage-skills','markController@manageSkills')->name('marks.setup.manage-skills');
+                    Route::get('preferences/{marking_period_id?}','markController@preferences')->name('marks.setup.preferences');
+                    Route::post('preferences-select','markController@preferences_select')->name('marks.setup.preferences-select');
+                    Route::post('update-preferences/{marking_period_id?}','markController@preferences_update')->name('marks.setup.preferences-update');
+                    Route::post('update/{skill_id}','markController@updateSkill');
+                    Route::post('delete/{skill_id}','markController@deleteSkill');
+                    Route::post('add-skill','markController@addSkill');
+                });
             });
-
+            // for general users
             Route::get('select_year/{id}', 'MarkController@year_selector')->name('marks.year_selector');
             Route::post('select_year/{id}', 'MarkController@year_selected')->name('marks.year_select');
             Route::get('show/{id}/{year}', 'MarkController@show')->name('marks.show');
             Route::get('print/{id}/{exam_id}/{year}', 'MarkController@print_view')->name('marks.print');
 
         });
-
+        Route::group(['prefix'=>'resource'],function(){
+            // FOR TEAM SA
+            Route::group(['middleware'=>'teamSA'],function(){
+                // Route::delete('/remove-resource','')
+            });
+            // FOR TEAM SAT
+            Route::group(['middleware'=>'teamSAT'],function(){
+                Route::post('create','ResourceController@create');
+                Route::delete('delete/{resource_id}','ResourceController@delete');
+                Route::put('edit/{resource_id}','ResourceController@editResourceById');
+            });
+            // FOR all users
+            Route::get('/','ResourceController@index')->name('resource.index');
+            Route::get('/all','ResourceController@all');
+            Route::get('/{resource_id}','ResourceController@resource_by_id');
+        });
         Route::resource('students', 'StudentRecordController');
         Route::resource('users', 'UserController');
+        Route::resource('setup','setupController');
         Route::resource('classes', 'MyClassController');
         Route::resource('sections', 'SectionController');
         Route::resource('subjects', 'SubjectController');

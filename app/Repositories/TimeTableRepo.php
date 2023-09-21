@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Models\TimeSlot;
 use App\Models\TimeTable;
 use App\Models\TimeTableRecord;
+use Qs;
 
 class TimeTableRepo
 {
@@ -82,7 +83,7 @@ class TimeTableRepo
 
     public function getAllRecords()
     {
-        return TimeTableRecord::orderBy('created_at')->with(['my_class', 'exam'])->get();
+        return TimeTableRecord::where(['school_id'=>Qs::findActiveSchool()[0]->id])->orderBy('created_at')->with(['my_class', 'exam','marking_period','acad_year'])->get();
     }
 
     public function getTTRByIDs($ids)

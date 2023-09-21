@@ -2,8 +2,8 @@
 @section('page_title', 'Manage Users')
 @section('content')
 
-    <div class="card">
-        <div class="card-header header-elements-inline">
+    <div class="card shadow-none">
+        <div class="card-header header-elements-inline py-3 bg-body-tertiary text-dark">
             <h6 class="card-title">Manage Users</h6>
             {!! Qs::getPanelOptions() !!}
         </div>
@@ -21,7 +21,7 @@
                 </li>
             </ul>
 
-            <div class="tab-content">
+            <div class="tab-content p-md-4">
                 <div class="tab-pane fade show active" id="new-user">
                     <form method="post" enctype="multipart/form-data" class="wizard-form steps-validation ajax-store" action="{{ route('users.store') }}" data-fouc>
                         @csrf
@@ -177,7 +177,8 @@
                 </div>
 
                 @foreach($user_types as $ut)
-                    <div class="tab-pane fade" id="ut-{{Qs::hash($ut->id)}}">                         <table class="table datatable-button-html5-columns">
+                    <div class="tab-pane fade" id="ut-{{Qs::hash($ut->id)}}">
+                        <table class="table datatable-button-html5-columns">
                             <thead>
                             <tr>
                                 <th>S/N</th>

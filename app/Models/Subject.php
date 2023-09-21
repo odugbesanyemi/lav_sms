@@ -7,11 +7,11 @@ use Eloquent;
 
 class Subject extends Eloquent
 {
-    protected $fillable = ['name', 'my_class_id', 'teacher_id', 'slug'];
+    protected $fillable = ['name', 'school_id', 'my_class_id', 'teacher_id', 'slug'];
 
     public function my_class()
     {
-        return $this->belongsTo(MyClass::class);
+        return $this->belongsTo(GradeLevels::class,'my_class_id');
     }
 
     public function teacher()

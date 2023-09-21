@@ -1,7 +1,7 @@
 <script>
 
     function getLGA(state_id){
-        var url = '{{ route('get_lga', [':id']) }}';
+        var url = "{{ route('get_lga',[':id']) }}";
         url = url.replace(':id', state_id);
         var lga = $('#lga_id');
 
@@ -17,13 +17,12 @@
                         text: data.name
                     }));
                 });
-
             }
         })
     }
 
     function getClassSections(class_id, destination){
-        var url = '{{ route('get_class_sections', [':id']) }}';
+        var url = "{{ route('get_class_sections', [':id']) }}";
         url = url.replace(':id', class_id);
         var section = destination ? $(destination) : $('#section_id');
 
@@ -45,7 +44,7 @@
     }
 
     function getClassSubjects(class_id){
-        var url = '{{ route('get_class_subjects', [':id']) }}';
+        var url = "{{ route('get_class_subjects', [':id']) }}";
         url = url.replace(':id', class_id);
         var section = $('#section_id');
         var subject = $('#subject_id');
@@ -75,37 +74,38 @@
     }
 
 
-    {{--Notifications--}}
 
-    @if (session('pop_error'))
-    pop({msg : '{{ session('pop_error') }}', type : 'error'});
+    // notifications
+
+    @if(session('pop_error'))
+    pop({msg : "{{ session('pop_error')}}", type : 'error'});
     @endif
 
-    @if (session('pop_warning'))
-    pop({msg : '{{ session('pop_warning') }}', type : 'warning'});
+    @if(session('pop_warning'))
+    pop({msg : "{{ session('pop_warning') }}", type : 'warning'});
     @endif
 
- @if (session('pop_success'))
-    pop({msg : '{{ session('pop_success') }}', type : 'success', title: 'GREAT!!'});
+    @if(session('pop_success'))
+    pop({msg : "{{ session('pop_success') }}", type : 'success', title: 'GREAT!!'});
     @endif
 
-    @if (session('flash_info'))
-      flash({msg : '{{ session('flash_info') }}', type : 'info'});
+    @if(session('flash_info'))
+      flash({msg : "{{ session('flash_info') }}", type : 'info'});
     @endif
 
-    @if (session('flash_success'))
-      flash({msg : '{{ session('flash_success') }}', type : 'success'});
+    @if(session('flash_success'))
+      flash({msg : "{{ session('flash_success') }}", type : 'success'});
     @endif
 
-    @if (session('flash_warning'))
-      flash({msg : '{{ session('flash_warning') }}', type : 'warning'});
+    @if(session('flash_warning'))
+      flash({msg : "{{ session('flash_warning') }}", type : 'warning'});
     @endif
 
-     @if (session('flash_error') || session('flash_danger'))
-      flash({msg : '{{ session('flash_error') ?: session('flash_danger') }}', type : 'danger'});
+     @if(session('flash_error') || session('flash_danger'))
+      flash({msg : "{{ session('flash_error') ?: session('flash_danger') }}", type : 'danger'});
     @endif
 
-    {{--End Notifications--}}
+    // end notifications
 
     function pop(data){
         swal({
@@ -200,7 +200,7 @@
     $('.download-receipt').on('click', function(ev){
         ev.preventDefault();
         $.get($(this).attr('href'));
-        flash({msg : '{{ 'Download in Progress' }}', type : 'info'});
+        flash({msg : "{{ 'Download in Progress' }}", type : 'info'});
     });
 
     function reloadDiv(div){
@@ -281,6 +281,9 @@
         form[0].reset();
     }
 
-
+  $(document).ready()
+  {
+    $('#editor').trumbowyg()
+  }
 
 </script>

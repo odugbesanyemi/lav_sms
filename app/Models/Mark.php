@@ -7,7 +7,7 @@ use Eloquent;
 
 class Mark extends Eloquent
 {
-    protected $fillable = ['t1', 't2', 't3', 't4', 'tca', 'exm', 'tex1', 'tex2', 'tex3', 'sub_pos', 'cum', 'cum_ave', 'grade_id', 'year', 'exam_id', 'subject_id', 'my_class_id', 'student_id', 'section_id'];
+    protected $fillable = ['student_id','subject_id','my_class_id','section_id','exam_id','ca_score','exam_score','cum','grade_id','acad_year_id'];
 
     public function exam()
     {
@@ -21,7 +21,11 @@ class Mark extends Eloquent
 
     public function my_class()
     {
-        return $this->belongsTo(MyClass::class);
+        return $this->belongsTo(GradeLevels::class,'my_class_id');
+    }
+    public function acad_year()
+    {
+        return $this->belongsTo(AcademicCalendar::class,'acad_year_id');
     }
 
     public function user()

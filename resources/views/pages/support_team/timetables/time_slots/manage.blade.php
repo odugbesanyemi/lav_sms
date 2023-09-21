@@ -1,5 +1,5 @@
-<div class="card">
-    <div class="card-header header-elements-inline bg-success">
+<div class="card shadow-none border-0">
+    <div class="card-header header-elements-inline bg-success py-3">
         <h6 class="font-weight-bold card-title">Manage Time Slots - {{ $ttr->name }}</h6>
         {!! Qs::getPanelOptions() !!}
     </div>

@@ -1,8 +1,8 @@
 @extends('layouts.master')
 @section('page_title', 'Admit Student')
 @section('content')
-        <div class="card">
-            <div class="card-header bg-white header-elements-inline">
+        <div class="card shadow-none">
+            <div class="card-header header-elements-inline py-3 bg-body-tertiary text-dark">
                 <h6 class="card-title">Please fill The form Below To Admit A New Student</h6>
 
                 {!! Qs::getPanelOptions() !!}
@@ -135,8 +135,8 @@
                                 <select onchange="getClassSections(this.value)" data-placeholder="Choose..." required name="my_class_id" id="my_class_id" class="select-search form-control">
                                     <option value=""></option>
                                     @foreach($my_classes as $c)
-                                        <option {{ (old('my_class_id') == $c->id ? 'selected' : '') }} value="{{ $c->id }}">{{ $c->name }}</option>
-                                        @endforeach
+                                        <option {{ (old('my_class_id') == $c->id ? 'selected' : '') }} value="{{ $c->id }}">{{ $c->title }}</option>
+                                    @endforeach
                                 </select>
                         </div>
                             </div>
@@ -207,6 +207,8 @@
                                 <input type="text" name="adm_no" placeholder="Admission Number" class="form-control" value="{{ old('adm_no') }}">
                             </div>
                         </div>
+                        <input type="hidden" name="school_id" value="{{ Qs::findActiveSchool()[0]->id }}">
+                        <input type="hidden" name="acad_year_id" value="{{ Qs::getActiveAcademicYear()[0]->id }}">
                     </div>
                 </fieldset>
 

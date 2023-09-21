@@ -15,10 +15,12 @@ class CreateTimeTablesTable extends Migration
     {
         Schema::create('time_table_records', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('school_id');
+            $table->integer('marking_period_id');
             $table->string('name', 100)->unique();
             $table->unsignedInteger('my_class_id');
             $table->unsignedInteger('exam_id')->nullable();
-            $table->string('year', 100);
+            $table->integer('acad_year_id');
             $table->timestamps();
 
             $table->unique(['my_class_id', 'exam_id', 'year']);

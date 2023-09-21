@@ -17,7 +17,7 @@ class ExamCreate extends FormRequest
     {
         return [
             'name' => 'required|string',
-            'term' => 'required|numeric',
+            'marking_period_id' => 'required|numeric',
         ];
     }
 

@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>TimeTable - {{ $ttr->name.' - '.$ttr->year }}</title>
+    <title>TimeTable - {{ $ttr->name.' - '.$ttr->acad_year->title }}</title>
     <style>
         @media print {
 
@@ -43,7 +43,7 @@
                     <strong><span style="color: #000; font-size: 15px;"><i>{{ ucwords($s['address']) }}</i></span></strong><br/>
                     <strong><span style="color: #000; text-decoration: underline; font-size: 15px;"><i>{{ config('app.url') }}/i></span></strong>
                     <br /> <br />
-                    <strong><span style="color: #000; font-size: 15px;"> TIMETABLE FOR {{ strtoupper($my_class->name. ' ('.$ttr->year.')' ) }}
+                    <strong><span style="color: #000; font-size: 15px;"> TIMETABLE FOR {{ strtoupper($my_class->title. ' ('.$ttr->acad_year->title.')' ) }}
                     </span></strong>
                 </td>
             </tr>
@@ -58,8 +58,8 @@
         {{-- Tabulation Begins --}}
         <table cellpadding="20" style="width:100%; border-collapse:collapse; border: 1px solid #000; margin: 10px auto;" border="1">
             <thead>
-            <tr>
-                <th rowspan="2">Time <i class="icon-arrow-right7 ml-2"></i> <br> Date<i class="icon-arrow-down7 ml-2"></i>
+            <tr class="border-bottom">
+                <th rowspan="2" class="">Time <i class="icon-arrow-right7 ml-2"></i> <br> Date<i class="icon-arrow-down7 ml-2"></i>
                 </th>
                 @foreach($time_slots as $tms)
                     <th rowspan="2">{{ $tms->time_from }} <br>

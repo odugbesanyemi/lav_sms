@@ -1,8 +1,8 @@
 @extends('layouts.master')
 @section('page_title', 'Tabulation Sheet')
 @section('content')
-    <div class="card">
-        <div class="card-header header-elements-inline">
+    <div class="card shadow-none">
+        <div class="card-header header-elements-inline py-3 bg-body-tertiary text-secondary">
             <h5 class="card-title"><i class="icon-books mr-2"></i> Tabulation Sheet</h5>
             {!! Qs::getPanelOptions() !!}
         </div>
@@ -29,7 +29,7 @@
                                             <select onchange="getClassSections(this.value)" required id="my_class_id" name="my_class_id" class="form-control select" data-placeholder="Select Class">
                                                 <option value=""></option>
                                                 @foreach($my_classes as $c)
-                                                    <option {{ ($selected && $my_class_id == $c->id) ? 'selected' : '' }} value="{{ $c->id }}">{{ $c->name }}</option>
+                                                    <option {{ ($selected && $my_class_id == $c->id) ? 'selected' : '' }} value="{{ $c->id }}">{{ $c->title }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -66,7 +66,7 @@
     @if($selected)
         <div class="card">
             <div class="card-header">
-                <h6 class="card-title font-weight-bold">Tabulation Sheet for {{ $my_class->name.' '.$section->name.' - '.$ex->name.' ('.$year.')' }}</h6>
+                <h6 class="card-title font-weight-bold">Tabulation Sheet for {{ $my_class->title.' '.$section->name.' - '.$ex->name.' ('.$ex->acad_year->title.')' }}</h6>
             </div>
             <div class="card-body">
                 <table class="table table-responsive table-striped">

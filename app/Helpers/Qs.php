@@ -2,14 +2,24 @@
 
 namespace App\Helpers;
 
+use App\Models\AcademicCalendar;
+use App\Models\CalendarEvents;
+use App\Models\ClassPeriods;
+use App\Models\Classrooms;
+use App\Models\GradeLevels;
+use App\Models\MarkingPeriods;
+use App\Models\School;
 use App\Models\Setting;
 use App\Models\StudentRecord;
 use App\Models\Subject;
+use App\Models\system_preferences;
 use Hashids\Hashids;
 use Illuminate\Support\Facades\Auth;
 
 class Qs
+
 {
+
     public static function displayError($errors)
     {
         foreach ($errors as $err) {
@@ -26,7 +36,7 @@ class Qs
 
     public static function getAppCode()
     {
-        return self::getSetting('system_title') ?: 'CJ';
+        return self::getSetting('system_title') ?: 'ADM';
     }
 
     public static function getDefaultUserImage()
@@ -101,7 +111,7 @@ class Qs
 
     public static function getStudentData($remove = [])
     {
-        $data = ['my_class_id', 'section_id', 'my_parent_id', 'dorm_id', 'dorm_room_no', 'year_admitted', 'house', 'age'];
+        $data = ['school_id','acad_year_id','my_class_id', 'section_id', 'my_parent_id', 'dorm_id', 'dorm_room_no', 'year_admitted', 'house', 'age'];
 
         return $remove ? array_values(array_diff($data, $remove)) : $data;
 
@@ -263,14 +273,14 @@ class Qs
 
     public static function getCurrentSession()
     {
-        return self::getSetting('current_session');
+        return self::getActiveAcademicYear()[0]->title;
     }
 
     public static function getNextSession()
     {
         $oy = self::getCurrentSession();
-        $old_yr = explode('-', $oy);
-        return ++$old_yr[0].'-'.++$old_yr[1];
+        $old_yr = explode('/', $oy);
+        return ++$old_yr[0].'/'.++$old_yr[1];
     }
 
     public static function getSystemName()
@@ -324,7 +334,7 @@ class Qs
     public static function storeOk($routeName)
     {
         return self::goWithSuccess($routeName, __('msg.store_ok'));
-    }
+        }
 
     public static function deleteOk($routeName)
     {
@@ -362,5 +372,88 @@ class Qs
     {
         return ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
     }
+    public static function findActiveSchool()
+    {
+      return  School::Where('active',1)->get();
+    }
+    public static function getSchools()
+    {
+        $data=[];
+        $data = School::select('id', 'name','active')->get();
+        return self::userIsSuperAdmin()?$data:self::findActiveSchool();
+    }
+    public static function getSchoolPreferences(){
+        $id = self::findActiveSchool()[0]->id;
+        return system_preferences::where('school_id',$id)->get();
+    }
+    public static function getAllAcademicYear(){
+        $active_School_id = self::findActiveSchool()[0]->id;
+        $data = [];
+        $data = AcademicCalendar::where('school_id',$active_School_id)->get();
+        return self::userIsSuperAdmin()?$data:self::getActiveAcademicYear();
+    }
+    public static function getActiveAcademicYear(){
+        $active_School_id = self::findActiveSchool()[0]->id;
+        // return session that belongs to school and also default is true
+        $data = AcademicCalendar::where('school_id',$active_School_id)
+            ->where('default',1)
+            ->get();
+        return $data;
+    }
 
+    public static function findAcademicYearByTitle($title){
+        $acad_year = AcademicCalendar::where('title',$title)->get();
+        return $acad_year;
+    }
+
+    public static function findAcademicYearById($id){
+        $acad_year = AcademicCalendar::where('id',$id)->get();
+        return $acad_year;
+    }
+
+    public static function getSchoolCalendarEvents(){
+        $active_School_id = self::findActiveSchool()[0]->id;
+        $active_acad_year_id = self::getActiveAcademicYear()[0]->id;
+        return CalendarEvents::where('school_id',$active_School_id)
+            ->where('acad_year_id',$active_acad_year_id)
+            ->get();
+    }
+
+    public static function getSemesters(){
+        $active_School_id = self::findActiveSchool()[0]->id;
+        $active_acad_year_id = self::getActiveAcademicYear()[0]->id;
+        return MarkingPeriods::where('school_id',$active_School_id)
+        ->where('acad_year_id',$active_acad_year_id)
+        ->where('mp_type','semester')
+        ->get();
+    }
+
+    public static function getSemesterQuaters($semesterId){
+        $active_School_id = self::findActiveSchool()[0]->id;
+        $active_acad_year_id = self::getActiveAcademicYear()[0]->id;
+        return MarkingPeriods::where('school_id',$active_School_id)
+        ->where('acad_year_id',$active_acad_year_id)
+        ->where('parent_id',$semesterId)
+        ->where('mp_type','quarter')
+        ->get();
+    }
+    public static function getMarkingPeriod($mp_id){
+        return MarkingPeriods::where('id',$mp_id)->get();
+    }
+
+    public static function getAllClassPeriods(){
+        return ClassPeriods::all();
+    }
+
+    public static function getClassPeriodById($id){
+        return ClassPeriods::find($id);
+    }
+
+    public static function getAllGradeLevels(){
+        return GradeLevels::all();
+    }
+
+    public static function getAllClassrooms(){
+        return Classrooms::all();
+    }
 }

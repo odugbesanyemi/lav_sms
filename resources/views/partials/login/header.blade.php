@@ -1,5 +1,5 @@
 <!-- Main navbar -->
-<div class="navbar navbar-expand-md navbar-dark">
+<div class="navbar navbar-expand-md navbar-dark " tabindex="20" >
     <div class="mt-2 mr-5">
         <a href="{{ route('dashboard') }}" class="d-inline-block">
             <h4 class="text-bold text-white">{{ Qs::getSystemName() }}</h4>
@@ -28,12 +28,12 @@
                 </a>
             </li>
 
-            <li class="nav-item dropdown">
+            <!-- <li class="nav-item dropdown">
                 <a href="#" class="navbar-nav-link">
                     <i class="icon-cog3"></i>
                     <span class="d-md-none ml-2">Options</span>
                 </a>
-            </li>
+            </li> -->
         </ul>
     </div>
 </div>

@@ -16,7 +16,7 @@
                         <div class="form-group row">
                             <label class="col-lg-3 col-form-label font-weight-semibold">Name <span class="text-danger">*</span></label>
                             <div class="col-lg-9">
-                                <input name="name" value="{{ $c->name }}" required type="text" class="form-control" placeholder="Name of Class">
+                                <input name="name" value="{{ $c->title }}" required type="text" class="form-control" placeholder="Name of Class">
                             </div>
                         </div>
 
@@ -27,19 +27,13 @@
                                 <select data-placeholder="Select Teacher" class="form-control select-search" name="teacher_id" id="teacher_id">
                                     <option value=""></option>
                                     @foreach($teachers as $t)
-                                        <option {{ $c->teacher_id == $t->id ? 'selected' : '' }} value="{{ Qs::hash($t->id) }}">{{ $t->name }}</option>
+                                        <option {{ $c->teacher_id == $t->id ? 'selected' : '' }} value="{{ Qs::hash($t->id) }}">{{ $t->title }}</option>
                                     @endforeach
                                 </select>
                             </div>
                         </div>
                       --}}
 
-                        <div class="form-group row">
-                            <label for="class_type_id" class="col-lg-3 col-form-label font-weight-semibold">Class Type</label>
-                            <div class="col-lg-9">
-                                <input class="form-control" disabled="disabled" value="{{ $c->class_type->name }}" title="Class Type" type="text">
-                            </div>
-                        </div>
 
                         <div class="text-right">
                             <button type="submit" class="btn btn-primary">Submit form <i class="icon-paperplane ml-2"></i></button>

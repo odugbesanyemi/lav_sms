@@ -6,6 +6,9 @@ use App\Models\Exam;
 use App\Models\ExamRecord;
 use App\Models\Grade;
 use App\Models\Mark;
+use App\Models\MarkingPeriods;
+use App\Models\MarkPreferences;
+use DateTime;
 use Illuminate\Database\Eloquent\Collection;
 
 class Mk extends Qs
@@ -122,12 +125,13 @@ class Mk extends Qs
         return Exam::where($d)->first();
     }
 
-    public static function getGradeList($class_type_id)
+    public static function getGradeList($school_id)
     {
-        $grades = Grade::where(['class_type_id' => $class_type_id])->orderBy('name')->get();
+        $grades = Grade::where(['school_id' => $school_id])->orderBy('name')->get();
 
         if($grades->count() < 1){
-            $grades = Grade::whereNull('class_type_id')->orderBy('name')->get();
+            $anySchoolId = Grade::first();
+            $grades = Grade::where('school_id',$anySchoolId[0]->school_id)->orderBy('name')->get();
         }
         return $grades;
     }
@@ -153,5 +157,113 @@ class Mk extends Qs
         }
         return true;
     }
+    public static function getExamById($id){
+        return Exam::find($id)->get();
+    }
 
+    public static function getMarkPreference($marking_period_id){
+        return MarkPreferences::where(['marking_period_id'=>$marking_period_id,'acad_year_id'=>Qs::getActiveAcademicYear()[0]->id])->get();
+    }
+
+    public static function isMarkingPeriod($marking_period_id)
+    {
+        if(Qs::userIsTeacher()){
+            // check if the marking period is within the current time
+            $markingPeriod = MarkingPeriods::find($marking_period_id)->get();
+            $startDate = $markingPeriod[0]->post_start_date;
+            $endDate = $markingPeriod[0]->post_end_date;
+            $currentDate = date('Y-m-d');
+            $startDateTime = new DateTime($startDate);
+            $endDateTime = new DateTime($endDate);
+            $currentDateTime = new DateTime($currentDate);
+            if ($currentDateTime >= $startDateTime && $currentDateTime <= $endDateTime) {
+                // echo "The current date is within the range.";
+                return true;
+            } else {
+                // echo "The current date is not within the range.";
+                return false;
+            }
+        }
+        return true;
+    }
+    public static function markingTypeIsSemester($marking_period_id){
+        $markingPeriod = MarkingPeriods::where('id',$marking_period_id)->get();
+        if($markingPeriod[0]->mp_type === 'semester'){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    public static function markingTypeIsQuarter($marking_period_id)
+    {
+        $markingPeriod = MarkingPeriods::where('id',$marking_period_id)->get();
+        if($markingPeriod[0]->mp_type === 'quarter'){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    public static function markingTypeOrder($marking_period_id)
+    {
+        $markingPreferences = MarkPreferences::where('marking_period_id',$marking_period_id)->get();
+        return $markingPreferences[0]->type_order;
+    }
+
+    public static function reportTypeName($marking_period_id)
+    {
+        if(self::markingTypeIsSemester($marking_period_id)==true){
+            switch (self::markingTypeOrder($marking_period_id)) {
+                case '1':
+                    return 'FIRST TERM';
+                    break;
+                case '2':
+                    return 'SECOND TERM';
+                    break;
+                default:
+                    return 'THIRD TERM';
+                    break;
+            }
+        }
+        else{
+            switch (self::markingTypeOrder($marking_period_id)) {
+                case '1':
+                    return 'MID TERM';
+                    break;
+                case '2':
+                    return 'FINAL TERM';
+                    break;
+            }
+        }
+    }
+
+    public static function getMarkTotal($st_id,$acad_year_id,$subject_id,$mp_type,$order_type)
+    {
+        $marks = Mark::where(['student_id'=>$st_id,'acad_year_id'=>$acad_year_id,'subject_id'=>$subject_id])->get();
+        foreach ($marks as $mk) {
+
+            $exam_id = $mk->exam_id;
+            $marking_period_id = Exam::where('id',$exam_id)->first()->marking_period->id;
+            $mark_preferences = self::getMarkPreference($marking_period_id);
+            $mark_preferences_type_order = $mark_preferences[0]->type_order;
+            if($mark_preferences_type_order==$order_type){
+                $ca_score = $mk->ca_score;
+                $exam_score = $mk->exam_score;
+                $total = $ca_score + $exam_score;
+                return $total;
+            }
+        }
+    }
+
+    public static function getGradeDetails($school_id, $num)
+    {
+        $grades = self::getGradeList($school_id);
+        foreach ($grades as $grade) {
+            $grade_from = $grade->mark_from;
+            $grade_to = $grade->mark_to;
+            if($grade_from <= $num && $grade_to >= $num)
+            {
+                return $grade;
+            }
+        }
+    }
 }

@@ -6,9 +6,8 @@
             <th>S/N</th>
             <th>Name</th>
             <th>ADM_NO</th>
-            <th>1ST CA (20)</th>
-            <th>2ND CA (20)</th>
-            <th>EXAM (60)</th>
+            <th>CA ({{ $mp->ca_final_score?$mp->ca_final_score:40 }})</th>
+            <th>EXAM ({{ $mp->exam_final_score?$mp->exam_final_score:60 }})</th>
         </tr>
         </thead>
         <tbody>
@@ -18,17 +17,15 @@
                 <td>{{ $mk->user->name }} </td>
                 <td>{{ $mk->user->student_record->adm_no }}</td>
 
-{{--                CA AND EXAMS --}}
-                <td><input title="1ST CA" min="1" max="20" class="text-center" name="t1_{{ $mk->id }}" value="{{ $mk->t1 }}" type="number"></td>
-                <td><input title="2ND CA" min="1" max="20" class="text-center" name="t2_{{ $mk->id }}" value="{{ $mk->t2 }}" type="number"></td>
-                <td><input title="EXAM" min="1" max="60" class="text-center" name="exm_{{ $mk->id }}" value="{{ $mk->exm }}" type="number"></td>
-
+                {{-- CA AND EXAMS --}}
+                <td><input {{Mk::isMarkingPeriod($mp->marking_period_id)?'':'disabled'}} title="1ST CA" min="1" max="{{ $mp->ca_final_score?$mp->ca_final_score:40 }}" class="text-center form-input" name="ca_score_{{$mk->id}}" value="{{ $mk->ca_score }}" type="number"></td>
+                <td><input {{Mk::isMarkingPeriod($mp->marking_period_id)?'':'disabled'}} title="EXAM" min="1" max="{{ $mp->exam_final_score?$mp->exam_final_score:60 }}" class="text-center form-input" name="exam_score_{{$mk->id}}" value="{{ $mk->exam_score }}" type="number"></td>
             </tr>
         @endforeach
         </tbody>
     </table>
 
-    <div class="text-center mt-2">
+    <div class=" mt-2">
         <button type="submit" class="btn btn-primary">Update Marks <i class="icon-paperplane ml-2"></i></button>
     </div>
 </form>

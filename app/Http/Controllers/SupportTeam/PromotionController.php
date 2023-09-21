@@ -4,6 +4,7 @@ namespace App\Http\Controllers\SupportTeam;
 
 use App\Helpers\Qs;
 use App\Http\Controllers\Controller;
+use App\Models\AcademicCalendar;
 use App\Models\Mark;
 use App\Repositories\MyClassRepo;
 use App\Repositories\StudentRepo;
@@ -23,9 +24,9 @@ class PromotionController extends Controller
 
     public function promotion($fc = NULL, $fs = NULL, $tc = NULL, $ts = NULL)
     {
-        $d['old_year'] = $old_yr = Qs::getSetting('current_session');
-        $old_yr = explode('-', $old_yr);
-        $d['new_year'] = ++$old_yr[0].'-'.++$old_yr[1];
+        $d['old_year'] = $old_yr = Qs::getActiveAcademicYear()[0]->title;
+        $old_yr = explode('/', $old_yr);
+        $d['new_year'] = ++$old_yr[0].'/'.++$old_yr[1];
         $d['my_classes'] = $this->my_class->all();
         $d['sections'] = $this->my_class->getAllSections();
         $d['selected'] = false;
@@ -36,10 +37,10 @@ class PromotionController extends Controller
             $d['fs'] = $fs;
             $d['tc'] = $tc;
             $d['ts'] = $ts;
-            $d['students'] = $sts = $this->student->getRecord(['my_class_id' => $fc, 'section_id' => $fs, 'session' => $d['old_year']])->get();
+            $d['students'] = $sts = $this->student->getRecord(['my_class_id' => $fc,'school_id'=> Qs::findActiveSchool()[0]->id, 'section_id' => $fs, 'acad_year_id' => Qs::getActiveAcademicYear()[0]->id])->get();
 
             if($sts->count() < 1){
-                return redirect()->route('students.promotion')->with('flash_success', __('msg.nstp'));
+                return redirect()->route('students.promotion')->with('flash_warning', __('msg.nstp'));
             }
         }
 
@@ -53,27 +54,46 @@ class PromotionController extends Controller
 
     public function promote(Request $req, $fc, $fs, $tc, $ts)
     {
-        $oy = Qs::getSetting('current_session'); $d = [];
-        $old_yr = explode('-', $oy);
-        $ny = ++$old_yr[0].'-'.++$old_yr[1];
-        $students = $this->student->getRecord(['my_class_id' => $fc, 'section_id' => $fs, 'session' => $oy ])->get()->sortBy('user.name');
+        $oy = Qs::getActiveAcademicYear()[0]->title; $d = [];
+        debugbar()->log($oy);
+        $old_yr = explode('/', $oy);
+        $ny = ++$old_yr[0].'/'.++$old_yr[1];
+
+        // check the academic Calendar to see if a title (ny) exists if it doesn't, create one
+        $new_acad_year = Qs::findAcademicYearByTitle($ny);
+        if($new_acad_year->count() < 1){
+            // meaning there is no saved academic year for the new promoted year hence create
+            $data = [
+                'school_id'=> Qs::findActiveSchool()[0]->id,
+                'title' => $ny,
+                'start_date'=> date('Y-m-d'),
+                'end_date'=>date('Y-m-d', strtotime(date('Y-m-d') . ' +3 months')),
+                'default'=>'0',
+            ];
+            AcademicCalendar::create($data);
+        }else{
+            // return redirect()->route('students.promotion')->with('flash_danger', __('Cannot Create Academic Calendar.'));
+            // do nothing since it has already been created
+        }
+
+        $students = $this->student->getRecord(['my_class_id' => $fc, 'section_id' => $fs, 'acad_year_id' => Qs::getActiveAcademicYear()[0]->id ])->get()->sortBy('user.name');
+
 
         if($students->count() < 1){
             return redirect()->route('students.promotion')->with('flash_danger', __('msg.srnf'));
         }
-
         foreach($students as $st){
             $p = 'p-'.$st->id;
             $p = $req->$p;
             if($p === 'P'){ // Promote
                 $d['my_class_id'] = $tc;
                 $d['section_id'] = $ts;
-                $d['session'] = $ny;
+                $d['acad_year_id'] =Qs::findAcademicYearByTitle($ny)[0]->id;
             }
             if($p === 'D'){ // Don't Promote
                 $d['my_class_id'] = $fc;
                 $d['section_id'] = $fs;
-                $d['session'] = $ny;
+                $d['acad_year_id'] = Qs::findAcademicYearByTitle($ny)[0]->id;
             }
             if($p === 'G'){ // Graduated
                 $d['my_class_id'] = $fc;
@@ -84,8 +104,9 @@ class PromotionController extends Controller
 
             $this->student->updateRecord($st->id, $d);
 
-//            Insert New Promotion Data
+//          Insert New Promotion Data
             $promote['from_class'] = $fc;
+            $promote['school_id'] = Qs::findActiveSchool()[0]->id;
             $promote['from_section'] = $fs;
             $promote['grad'] = ($p === 'G') ? 1 : 0;
             $promote['to_class'] = in_array($p, ['D', 'G']) ? $fc : $tc;
@@ -112,7 +133,6 @@ class PromotionController extends Controller
     public function reset($promotion_id)
     {
         $this->reset_single($promotion_id);
-
         return redirect()->route('students.promotion_manage')->with('flash_success', __('msg.update_ok'));
     }
 
@@ -145,7 +165,7 @@ class PromotionController extends Controller
 
         $data['my_class_id'] = $prom->from_class;
         $data['section_id'] = $prom->from_section;
-        $data['session'] = $prom->from_session;
+        $data['acad_year_id'] = Qs::findAcademicYearByTitle($prom->from_session)[0]->id ;
         $data['grad'] = 0;
         $data['grad_date'] = null;
 

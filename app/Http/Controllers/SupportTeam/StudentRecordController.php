@@ -11,6 +11,8 @@ use App\Repositories\MyClassRepo;
 use App\Repositories\StudentRepo;
 use App\Repositories\UserRepo;
 use App\Http\Controllers\Controller;
+use App\Models\Classrooms;
+use App\Models\GradeLevels;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
@@ -41,7 +43,7 @@ class StudentRecordController extends Controller
 
     public function create()
     {
-        $data['my_classes'] = $this->my_class->all();
+        $data['my_classes'] = GradeLevels::where('school_id',Qs::findActiveSchool()[0]->id)->get();
         $data['parents'] = $this->user->getUserByType('parent');
         $data['dorms'] = $this->student->getAllDorms();
         $data['states'] = $this->loc->getStates();
@@ -53,10 +55,8 @@ class StudentRecordController extends Controller
     {
        $data =  $req->only(Qs::getUserRecord());
        $sr =  $req->only(Qs::getStudentData());
-
-        $ct = $this->my_class->findTypeByClass($req->my_class_id)->code;
-       /* $ct = ($ct == 'J') ? 'JSS' : $ct;
-        $ct = ($ct == 'S') ? 'SS' : $ct;*/
+       debugbar()->log($data,$sr);
+        $ct = $this->my_class->find($req->my_class_id)->short_name;
 
         $data['user_type'] = 'student';
         $data['name'] = ucwords($req->name);

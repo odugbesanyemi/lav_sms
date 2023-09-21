@@ -7,6 +7,7 @@ use App\Http\Requests\Exam\ExamCreate;
 use App\Http\Requests\Exam\ExamUpdate;
 use App\Repositories\ExamRepo;
 use App\Http\Controllers\Controller;
+use App\Models\MarkingPeriods;
 
 class ExamController extends Controller
 {
@@ -22,13 +23,13 @@ class ExamController extends Controller
     public function index()
     {
         $d['exams'] = $this->exam->all();
+        $d['markingPeriods']= MarkingPeriods::where(['school_id'=>Qs::findActiveSchool()[0]->id,'acad_year_id'=>Qs::getActiveAcademicYear()[0]->id])->get();
         return view('pages.support_team.exams.index', $d);
     }
 
     public function store(ExamCreate $req)
     {
-        $data = $req->only(['name', 'term']);
-        $data['year'] = Qs::getSetting('current_session');
+        $data = $req->only(['name','marking_period_id','school_id','acad_year_id']);
 
         $this->exam->create($data);
         return back()->with('flash_success', __('msg.store_ok'));
@@ -37,12 +38,14 @@ class ExamController extends Controller
     public function edit($id)
     {
         $d['ex'] = $this->exam->find($id);
+        $d['markingPeriods']= MarkingPeriods::where(['school_id'=>Qs::findActiveSchool()[0]->id,'acad_year_id'=>Qs::getActiveAcademicYear()[0]->id])->get();
+
         return view('pages.support_team.exams.edit', $d);
     }
 
     public function update(ExamUpdate $req, $id)
     {
-        $data = $req->only(['name', 'term']);
+        $data = $req->only(['name', 'marking_period_id','school_id','acad_year_id']);
 
         $this->exam->update($id, $data);
         return back()->with('flash_success', __('msg.update_ok'));

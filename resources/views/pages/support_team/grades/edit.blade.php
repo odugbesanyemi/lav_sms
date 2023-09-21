@@ -2,33 +2,21 @@
 @section('page_title', 'Edit Grade')
 @section('content')
 
-    <div class="card">
-        <div class="card-header header-elements-inline">
+    <div class="card shadow-none">
+        <div class="card-header header-elements-inline py-3 bg-body-tertiary text-secondary">
             <h6 class="card-title">Edit Grade</h6>
             {!! Qs::getPanelOptions() !!}
         </div>
 
         <div class="card-body">
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-12">
                     <form method="post" action="{{ route('grades.update', $gr->id) }}">
                         @csrf @method('PUT')
                         <div class="form-group row">
                             <label class="col-lg-3 col-form-label font-weight-semibold">Name <span class="text-danger">*</span></label>
                             <div class="col-lg-9">
                                 <input name="name" value="{{ $gr->name }}" required type="text" class="form-control" placeholder="Eg. C4">
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <label for="class_type_id" class="col-lg-3 col-form-label font-weight-semibold">Grade Type</label>
-                            <div class="col-lg-9">
-                                <select class="form-control select" name="class_type_id" id="class_type_id">
-                                    <option value="">Not Applicable</option>
-                                    @foreach($class_types as $ct)
-                                        <option {{ $gr->class_type_id == $ct->id ? 'selected' : '' }} value="{{ $ct->id }}">{{ $ct->name }}</option>
-                                    @endforeach
-                                </select>
                             </div>
                         </div>
 

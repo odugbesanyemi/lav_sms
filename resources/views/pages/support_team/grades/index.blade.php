@@ -2,8 +2,8 @@
 @section('page_title', 'Manage Grades')
 @section('content')
 
-    <div class="card">
-        <div class="card-header header-elements-inline">
+    <div class="card shadow-none">
+        <div class="card-header header-elements-inline py-3 bg-body-tertiary text-secondary">
             <h6 class="card-title">Manage Grades</h6>
             {!! Qs::getPanelOptions() !!}
         </div>
@@ -14,14 +14,13 @@
                 <li class="nav-item"><a href="#new-grade" class="nav-link" data-toggle="tab"><i class="icon-plus2"></i> Add Grade</a></li>
             </ul>
 
-            <div class="tab-content">
+            <div class="tab-content p-md-4">
                     <div class="tab-pane fade show active" id="all-grades">
                         <table class="table datatable-button-html5-columns">
                             <thead>
                             <tr>
                                 <th>S/N</th>
                                 <th>Name</th>
-                                <th>Grade Type</th>
                                 <th>Range</th>
                                 <th>Remark</th>
                                 <th>Action</th>
@@ -32,7 +31,6 @@
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $gr->name }}</td>
-                                    <td>{{ $gr->class_type_id ? $class_types->where('id', $gr->class_type_id)->first()->name : ''}}</td>
                                     <td>{{ $gr->mark_from.' - '.$gr->mark_to }}</td>
                                     <td>{{ $gr->remark }}</td>
                                     <td class="text-center">
@@ -69,12 +67,12 @@
                             <div class="alert alert-info border-0 alert-dismissible">
                                 <button type="button" class="close" data-dismiss="alert"><span>&times;</span></button>
 
-                                <span>If The grade you are creating applies to all class types select <strong>NOT APPLICABLE.</strong> Otherwise select the Class Type That the grade applies to</span>
+                                <span>If The grade you are creating applies to all class types </span>
                             </div>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <form method="post" action="{{ route('grades.store') }}">
                                 @csrf
                                 <div class="form-group row">
@@ -84,28 +82,17 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group row">
-                                    <label for="class_type_id" class="col-lg-3 col-form-label font-weight-semibold">Grade Type</label>
-                                    <div class="col-lg-9">
-                                        <select class="form-control select" name="class_type_id" id="class_type_id">
-                                            <option value="">Not Applicable</option>
-                                         @foreach($class_types as $ct)
-                                                <option {{ old('class_type_id') == $ct->id ? 'selected' : '' }} value="{{ $ct->id }}">{{ $ct->name }}</option>
-                                             @endforeach
-                                        </select>
-                                    </div>
-                                </div>
 
                                 <div class="form-group row">
                                     <label class="col-lg-3 col-form-label font-weight-semibold">Mark From <span class="text-danger">*</span></label>
-                                    <div class="col-lg-3">
+                                    <div class="col-lg-9">
                                         <input min="0" max="100" name="mark_from" value="{{ old('mark_from') }}" required type="number" class="form-control" placeholder="0">
                                     </div>
                                 </div>
 
                                 <div class="form-group row">
                                     <label class="col-lg-3 col-form-label font-weight-semibold">Mark To <span class="text-danger">*</span></label>
-                                    <div class="col-lg-3">
+                                    <div class="col-lg-9">
                                         <input min="0" max="100" name="mark_to" value="{{ old('mark_to') }}" required type="number" class="form-control" placeholder="0">
                                     </div>
                                 </div>
@@ -121,6 +108,7 @@
                                         </select>
                                     </div>
                                 </div>
+                                <input type="hidden" name="school_id" value="{{Qs::findActiveSchool()[0]->id}}">
 
                                 <div class="text-right">
                                     <button type="submit" class="btn btn-primary">Submit form <i class="icon-paperplane ml-2"></i></button>

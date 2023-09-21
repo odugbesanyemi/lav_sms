@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Dorm;
+use Qs;
 
 class DormRepo
 {
@@ -14,7 +15,7 @@ class DormRepo
 
     public function getAll($order = 'name')
     {
-        return Dorm::orderBy($order)->get();
+        return Dorm::where('school_id', Qs::findActiveSchool()[0]->id)->orderBy($order)->get();
     }
 
     public function getDorm($data)

@@ -7,6 +7,7 @@ use App\Helpers\Pay;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Payment\PaymentCreate;
 use App\Http\Requests\Payment\PaymentUpdate;
+use App\Models\MarkingPeriods;
 use App\Models\Setting;
 use App\Repositories\MyClassRepo;
 use App\Repositories\PaymentRepo;
@@ -40,7 +41,7 @@ class PaymentController extends Controller
 
     public function show($year)
     {
-        $d['payments'] = $p = $this->pay->getPayment(['year' => $year])->get();
+        $d['payments'] = $p = $this->pay->getPayment(['acad_year_id' => $year])->get();
 
         if(($p->count() < 1)){
             return Qs::goWithDanger('payments.index');
@@ -63,6 +64,7 @@ class PaymentController extends Controller
     public function create()
     {
         $d['my_classes'] = $this->my_class->all();
+        $d['marking_periods']= MarkingPeriods::where(['school_id'=>Qs::findActiveSchool()[0]->id,'mp_type'=>'semester'])->get();
         return view('pages.support_team.payments.create', $d);
     }
 
@@ -178,8 +180,8 @@ class PaymentController extends Controller
 
         $wh['my_class_id'] = $class_id = $req->my_class_id;
 
-        $pay1 = $this->pay->getPayment(['my_class_id' => $class_id, 'year' => $this->year])->get();
-        $pay2 = $this->pay->getGeneralPayment(['year' => $this->year])->get();
+        $pay1 = $this->pay->getPayment(['my_class_id' => $class_id, 'acad_year_id' => $this->year])->get();
+        $pay2 = $this->pay->getGeneralPayment(['acad_year_id' => $this->year])->get();
         $payments = $pay2->count() ? $pay1->merge($pay2) : $pay1;
         $students = $this->student->getRecord($wh)->get();
 
@@ -202,7 +204,6 @@ class PaymentController extends Controller
     public function store(PaymentCreate $req)
     {
         $data = $req->all();
-        $data['year'] = $this->year;
         $data['ref_no'] = Pay::genRefCode();
         $this->pay->create($data);
 

@@ -4,8 +4,8 @@
         @foreach($tts->chunk(2) as $chunk)
             <div class="row">
                 @foreach($chunk as $tt)
-                    <div class="col-md-6">
-                        <div class="card">
+                    <div class="col-md-12">
+                        <div class="card shadow-none border-0">
                             <div class="card-header header-elements-inline">
                                 <h6 class="card-title font-weight-bold">{{ ($tt->exam_date ? 'Exam ('.date('D\, d/m/Y', strtotime($tt->exam_date)).')' : $tt->day) }} {{ '('.$tt->time_slot->full.')' .' - '.$tt->subject->name }}</h6>
                                 <div class="header-elements">

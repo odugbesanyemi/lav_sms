@@ -1,8 +1,8 @@
 @extends('layouts.master')
 @section('page_title', 'Fix Mark Errors')
 @section('content')
-    <div class="card">
-        <div class="card-header header-elements-inline">
+    <div class="card shadow-none">
+        <div class="card-header header-elements-inline py-3 bg-body-tertiary text-secondary">
             <h5 class="card-title"><i class="icon-wrench mr-2"></i> Batch Fix </h5>
             {!! Qs::getPanelOptions() !!}
         </div>

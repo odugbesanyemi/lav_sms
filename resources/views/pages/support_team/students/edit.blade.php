@@ -2,8 +2,8 @@
 @section('page_title', 'Edit Student')
 @section('content')
 
-        <div class="card">
-            <div class="card-header bg-white header-elements-inline">
+        <div class="card shadow-none">
+            <div class="card-header header-elements-inline py-3 bg-body-tertiary text-dark">
                 <h6 id="ajax-title" class="card-title">Please fill The form Below To Edit record of {{ $sr->user->name }}</h6>
 
                 {!! Qs::getPanelOptions() !!}
@@ -138,7 +138,7 @@
                                 <select onchange="getClassSections(this.value)" name="my_class_id" required id="my_class_id" class="form-control select-search" data-placeholder="Select Class">
                                     <option value=""></option>
                                     @foreach($my_classes as $c)
-                                        <option {{ $sr->my_class_id == $c->id ? 'selected' : '' }} value="{{ $c->id }}">{{ $c->name }}</option>
+                                        <option {{ $sr->my_class_id == $c->id ? 'selected' : '' }} value="{{ $c->id }}">{{ $c->title }}</option>
                                         @endforeach
                                     </select>
                             </div>

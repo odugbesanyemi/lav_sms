@@ -2,9 +2,9 @@
 @section('page_title', 'Manage TimeTable Record')
 @section('content')
 
-    <div class="card">
+    <div class="card shadow-none ">
         <div class="card-header header-elements-inline">
-            <h6 class="card-title font-weight-bold">{{ $ttr->name.' ('.$my_class->name.')'.' '.$ttr->year }}</h6>
+            <h6 class="card-title font-weight-bold">{{ $ttr->name.' ('.$my_class->title.')'.' '.$ttr->acad_year->title }}</h6>
             {!! Qs::getPanelOptions() !!}
         </div>
 
@@ -16,7 +16,7 @@
                 <li class="nav-item"><a target="_blank" href="{{ route('ttr.show', $ttr->id) }}" class="nav-link" >View TImeTable</a></li>
             </ul>
 
-            <div class="tab-content">
+            <div class="tab-content py-4">
                 {{--Add Time Slots--}}
                 @include('pages.support_team.timetables.time_slots.index')
                 {{--Add Subject--}}

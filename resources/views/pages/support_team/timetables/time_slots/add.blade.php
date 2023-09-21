@@ -6,8 +6,8 @@
     </div>
 
     <div class="col-md-6">
-        <div class="card">
-            <div class="card-header header-elements-inline bg-danger">
+        <div class="card shadow-none border-0">
+            <div class="card-header header-elements-inline bg-danger py-3 bg-gradient">
                 <h6 class="font-weight-bold card-title">Add Time Slots</h6>
                 {!! Qs::getPanelOptions() !!}
             </div>

@@ -21,7 +21,6 @@ class ExamUpdate extends FormRequest
     {
         return [
             'name' => 'required|string',
-            'term' => 'required|numeric',
         ];
     }
 

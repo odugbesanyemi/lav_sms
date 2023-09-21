@@ -2,9 +2,9 @@
 @section('page_title', 'Manage System Settings')
 @section('content')
 
-    <div class="card">
-        <div class="card-header header-elements-inline">
-            <h6 class="card-title font-weight-semibold">Update System Settungs </h6>
+    <div class="card shadow-none">
+        <div class="card-header header-elements-inline py-3 bg-body-tertiary text-secondary">
+            <h6 class="card-title font-weight-semibold">Update System Settings </h6>
             {!! Qs::getPanelOptions() !!}
         </div>
 
@@ -12,7 +12,7 @@
             <form enctype="multipart/form-data" method="post" action="{{ route('settings.update') }}">
                 @csrf @method('PUT')
             <div class="row">
-                <div class="col-md-6 border-right-2 border-right-blue-400">
+                <div class="col-md-12 ">
                         <div class="form-group row">
                             <label class="col-lg-3 col-form-label font-weight-semibold">Name of School <span class="text-danger">*</span></label>
                             <div class="col-lg-9">
@@ -85,9 +85,9 @@
                             </div>
                         </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-12">
                     {{--Fees--}}
-               <fieldset>
+               <!-- <fieldset>
                    <legend><strong>Next Term Fees</strong></legend>
                    @foreach($class_types as $ct)
                    <div class="form-group row">
@@ -97,7 +97,7 @@
                        </div>
                    </div>
                        @endforeach
-               </fieldset>
+               </fieldset> -->
                     <hr class="divider">
 
                     {{--Logo--}}

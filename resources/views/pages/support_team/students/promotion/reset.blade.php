@@ -3,7 +3,7 @@
 @section('content')
 
     {{--Reset All--}}
-    <div class="card">
+    <div class="card shadow-none">
         <div class="card-body text-center
 ">
             <button id="promotion-reset-all" class="btn btn-danger btn-large">Reset All Promotions for the Session</button>
@@ -11,8 +11,8 @@
     </div>
 
 {{-- Reset Promotions --}}
-    <div class="card">
-        <div class="card-header header-elements-inline">
+    <div class="card shadow-none">
+        <div class="card-header header-elements-inline py-3 bg-body-tertiary text-dark">
             <h5 class="card-title font-weight-bold">Manage Promotions - Students Who Were Promoted From <span class="text-danger">{{ $old_year }}</span> TO <span class="text-success">{{ $new_year }}</span> Session</h5>
             {!! Qs::getPanelOptions() !!}
         </div>
@@ -37,8 +37,8 @@
                         <td>{{ $loop->iteration }}</td>
                         <td><img class="rounded-circle" style="height: 40px; width: 40px;" src="{{ $p->student->photo }}" alt="photo"></td>
                         <td>{{ $p->student->name }}</td>
-                        <td>{{ $p->fc->name.' '.$p->fs->name }}</td>
-                        <td>{{ $p->tc->name.' '.$p->ts->name }}</td>
+                        <td>{{ $p->fc->title.' '.$p->fs->name }}</td>
+                        <td>{{ $p->tc->title.' '.$p->ts->name }}</td>
                         @if($p->status === 'P')
                             <td><span class="text-success">Promoted</span></td>
                         @elseif($p->status === 'D')

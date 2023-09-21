@@ -2,8 +2,8 @@
 @section('page_title', 'Edit User')
 @section('content')
 
-    <div class="card">
-        <div class="card-header header-elements-inline">
+    <div class="card shadow-none">
+        <div class="card-header header-elements-inline py-3 bg-body-tertiary text-dark">
             <h6 class="card-title">Edit User Details</h6>
             {!! Qs::getPanelOptions() !!}
         </div>

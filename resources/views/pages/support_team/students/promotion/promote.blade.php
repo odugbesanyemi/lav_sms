@@ -16,7 +16,7 @@
                 <td>{{ $loop->iteration }}</td>
                 <td><img class="rounded-circle" style="height: 30px; width: 30px;" src="{{ $sr->user->photo }}" alt="img"></td>
                 <td>{{ $sr->user->name }}</td>
-                <td>{{ $sr->session }}</td>
+                <td>{{ Qs::getActiveAcademicYear()[0]->title }}</td>
                 <td>
                     <select class="form-control select" name="p-{{$sr->id}}" id="p-{{$sr->id}}">
                         <option value="P">Promote</option>

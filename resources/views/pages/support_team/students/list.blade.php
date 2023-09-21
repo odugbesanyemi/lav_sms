@@ -1,16 +1,16 @@
 @extends('layouts.master')
-@section('page_title', 'Student Information - '.$my_class->name)
+@section('page_title', 'Student Information - '.$my_class->title)
 @section('content')
 
-    <div class="card">
-        <div class="card-header header-elements-inline">
+    <div class="card shadow-none">
+        <div class="card-header header-elements-inline py-3 bg-body-tertiary text-dark">
             <h6 class="card-title">Students List</h6>
             {!! Qs::getPanelOptions() !!}
         </div>
 
         <div class="card-body">
             <ul class="nav nav-tabs nav-tabs-highlight">
-                <li class="nav-item"><a href="#all-students" class="nav-link active" data-toggle="tab">All {{ $my_class->name }} Students</a></li>
+                <li class="nav-item"><a href="#all-students" class="nav-link active" data-toggle="tab">All {{ $my_class->title }} Students</a></li>
                 <li class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Sections</a>
                     <div class="dropdown-menu dropdown-menu-right">
@@ -21,7 +21,7 @@
                 </li>
             </ul>
 
-            <div class="tab-content">
+            <div class="tab-content p-md-4">
                 <div class="tab-pane fade show active" id="all-students">
                     <table class="table datatable-button-html5-columns">
                         <thead>

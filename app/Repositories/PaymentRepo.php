@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Helpers\Qs;
+use App\Models\MarkingPeriods;
 use App\Models\Payment;
 use App\Models\PaymentRecord;
 use App\Models\Receipt;
@@ -32,7 +33,7 @@ class PaymentRepo
 
     public function getPaymentYears()
     {
-        return Payment::select('year')->distinct()->get();
+        return Qs::getAllAcademicYear();
     }
 
     public function find($id)

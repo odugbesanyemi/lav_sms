@@ -1,4 +1,4 @@
 {{--Books--}}
 <li class="nav-item">
-    <a href="#" class="nav-link "><i class="icon-books"></i> Books</a>
+    <a href="#" class="nav-link "><iconify-icon icon="carbon:book"></iconify-icon> Books</a>
 </li>

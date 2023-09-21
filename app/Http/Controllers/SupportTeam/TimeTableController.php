@@ -11,6 +11,7 @@ use App\Repositories\ExamRepo;
 use App\Repositories\MyClassRepo;
 use App\Repositories\TimeTableRepo;
 use App\Http\Controllers\Controller;
+use App\Models\MarkingPeriods;
 use Illuminate\Http\Request;
 
 class TimeTableController extends Controller
@@ -27,8 +28,9 @@ class TimeTableController extends Controller
 
     public function index()
     {
-        $d['exams'] = $this->exam->getExam(['year' => $this->year]);
+        $d['exams'] = $this->exam->getExam(['acad_year_id' => $this->year]);
         $d['my_classes'] = $this->my_class->all();
+        $d['markingPeriods'] = MarkingPeriods::all();
         $d['tt_records'] = $this->tt->getAllRecords();
 
         return view('pages.support_team.timetables.index', $d);
@@ -158,6 +160,7 @@ class TimeTableController extends Controller
     {
         $d['ttr'] = $ttr = $this->tt->findRecord($ttr_id);
         $d['exams'] = $this->exam->getExam(['year' => $ttr->year]);
+        $d['markingPeriods'] = MarkingPeriods::all();
         $d['my_classes'] = $this->my_class->all();
 
         return view('pages.support_team.timetables.edit', $d);

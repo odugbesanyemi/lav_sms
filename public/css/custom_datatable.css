@@ -1,0 +1,22 @@
+.dtable-filter-field{
+    padding: 10px 10px 10px 35px;
+    color: rgb(39, 39, 39);
+    border-radius: 5px;
+    background-image: url("../assets/icons/search.png");
+    background-size: 20px 20px;
+    background-repeat: no-repeat;
+    background-position: 10px center;
+}
+.dtable-panel{
+
+    padding: 5px;
+    border-bottom: 1px solid rgb(39, 39, 39);
+}
+.dtable{
+    /* display: none; */
+    width: 100%;
+}
+
+@media (min-width:768px)  {
+
+}

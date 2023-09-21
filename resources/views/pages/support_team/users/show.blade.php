@@ -3,7 +3,7 @@
 @section('content')
     <div class="row">
         <div class="col-md-3 text-center">
-            <div class="card">
+            <div class="card shadow-none">
                 <div class="card-body">
                     <img style="width: 90%; height:90%" src="{{ $user->photo }}" alt="photo" class="rounded-circle">
                     <br>
@@ -12,7 +12,7 @@
             </div>
         </div>
         <div class="col-md-9">
-            <div class="card">
+            <div class="card shadow-none">
                 <div class="card-body">
                     <ul class="nav nav-tabs nav-tabs-highlight">
                         <li class="nav-item">
@@ -20,13 +20,13 @@
                         </li>
                     </ul>
 
-                    <div class="tab-content">
+                    <div class="tab-content p-md-4">
                         {{--Basic Info--}}
                         <div class="tab-pane fade show active" id="basic-info">
                             <table class="table table-bordered">
                                 <tbody>
                                 <tr>
-                                    <td class="font-weight-bold">Name</td>
+                                    <td class="font-weight-bold w-25">Name</td>
                                     <td>{{ $user->name }}</td>
                                 </tr>
                                 <tr>

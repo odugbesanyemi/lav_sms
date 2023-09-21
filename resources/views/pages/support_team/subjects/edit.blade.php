@@ -32,7 +32,7 @@
                             <div class="col-lg-9">
                                 <select required data-placeholder="Select Class" class="form-control select" name="my_class_id" id="my_class_id">
                                     @foreach($my_classes as $c)
-                                        <option {{ $s->my_class_id == $c->id ? 'selected' : '' }} value="{{ $c->id }}">{{ $c->name }}</option>
+                                        <option {{ $s->my_class_id == $c->id ? 'selected' : '' }} value="{{ $c->id }}">{{ $c->title }}</option>
                                     @endforeach
                                 </select>
                             </div>

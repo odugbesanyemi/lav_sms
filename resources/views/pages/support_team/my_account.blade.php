@@ -2,8 +2,8 @@
 @section('page_title', 'My Account')
 @section('content')
 
-    <div class="card">
-        <div class="card-header header-elements-inline">
+    <div class="card shadow-none">
+        <div class="card-header header-elements-inline py-3 bg-body-tertiary text-secondary">
             <h6 class="card-title">My Account</h6>
             {!! Qs::getPanelOptions() !!}
         </div>
@@ -16,10 +16,10 @@
                 @endif
             </ul>
 
-            <div class="tab-content">
+            <div class="tab-content p-md-4">
                 <div class="tab-pane fade show active" id="change-pass">
                     <div class="row">
-                        <div class="col-md-8">
+                        <div class="col-md-12">
                             <form method="post" action="{{ route('my_account.change_pass') }}">
                                 @csrf @method('put')
 
@@ -54,7 +54,7 @@
                 @if(Qs::userIsPTA())
                     <div class="tab-pane fade" id="edit-profile">
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                                 <form enctype="multipart/form-data" method="post" action="{{ route('my_account.update') }}">
                                     @csrf @method('put')
 

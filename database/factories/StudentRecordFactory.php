@@ -25,7 +25,8 @@ class StudentRecordFactory extends Factory
     public function definition()
     {
         return [
-            'session' => Qs::getCurrentSession(),
+            'school_id' => Qs::findActiveSchool()[0]->id,
+            'acad_year_id'=>QS::getActiveAcademicYear()[0]->id,
             'my_class_id' => MyClass::first()->id,
             'section_id' => Section::first()->id,
             'user_id' => null

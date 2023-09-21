@@ -1,8 +1,8 @@
 @extends('layouts.master')
 @section('page_title', 'Select Exam Year')
 @section('content')
-    <div class="card">
-        <div class="card-header header-elements-inline">
+    <div class="card shadow-none">
+        <div class="card-header header-elements-inline py-3 bg-body-tertiary text-secondary">
             <h5 class="card-title"><i class="icon-alarm mr-2"></i> Select Exam Year</h5>
             {!! Qs::getPanelOptions() !!}
         </div>
@@ -16,7 +16,7 @@
                             <label for="year" class="font-weight-bold col-form-label-lg">Select Exam Year:</label>
                             <select required id="year" name="year" data-placeholder="Select Exam Year" class="form-control select select-lg">
                                 @foreach($years as $y)
-                                    <option value="{{ $y->year }}">{{ $y->year }}</option>
+                                    <option value="{{ $y->acad_year_id }}">{{ Qs::findAcademicYearById($y->acad_year_id)[0]->title  }}</option>
                                 @endforeach
                             </select>
                         </div>

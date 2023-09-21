@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-md-6">
-        <div class="card">
-            <div class="card-header header-elements-inline bg-danger">
+        <div class="card shadow-none">
+            <div class="card-header header-elements-inline py-3 bg-body-tertiary text-dark">
                 <h6 class="card-title font-weight-bold">AFFECTIVE TRAITS</h6>
                 {!! Qs::getPanelOptions() !!}
             </div>
@@ -24,8 +24,6 @@
                         </div>
                     @endforeach
 
-
-
                     <div class="text-right">
                         <button type="submit" class="btn btn-primary">Submit form <i class="icon-paperplane ml-2"></i></button>
                     </div>
@@ -35,8 +33,8 @@
     </div>
 
     <div class="col-md-6">
-        <div class="card">
-            <div class="card-header header-elements-inline bg-success">
+        <div class="card shadow-none">
+            <div class="card-header header-elements-inline py-3 bg-body-tertiary text-dark">
                 <h6 class="card-title font-weight-bold">PSYCHOMOTOR SKILLS</h6>
                 {!! Qs::getPanelOptions() !!}
             </div>

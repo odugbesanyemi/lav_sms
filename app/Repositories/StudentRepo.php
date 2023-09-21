@@ -17,7 +17,7 @@ class StudentRepo {
 
     public function activeStudents()
     {
-        return StudentRecord::where(['grad' => 0]);
+        return StudentRecord::where(['grad' => 0,'school_id'=>Qs::findActiveSchool()[0]->id]);
     }
 
     public function gradStudents()

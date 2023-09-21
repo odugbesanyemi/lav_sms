@@ -2,8 +2,8 @@
 @section('page_title', 'Manage Dorms')
 @section('content')
 
-    <div class="card">
-        <div class="card-header header-elements-inline">
+    <div class="card shadow-none">
+        <div class="card-header header-elements-inline py-3 bg-body-tertiary text-secondary">
             <h6 class="card-title">Manage Dorms</h6>
             {!! Qs::getPanelOptions() !!}
         </div>
@@ -14,7 +14,7 @@
                 <li class="nav-item"><a href="#new-dorm" class="nav-link" data-toggle="tab"><i class="icon-plus2"></i> Create New Dorm</a></li>
             </ul>
 
-            <div class="tab-content">
+            <div class="tab-content p-md-4">
                     <div class="tab-pane fade show active" id="all-dorms">
                         <table class="table datatable-button-html5-columns">
                             <thead>
@@ -62,7 +62,7 @@
                 <div class="tab-pane fade" id="new-dorm">
 
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <form class="ajax-store" method="post" action="{{ route('dorms.store') }}">
                                 @csrf
                                 <div class="form-group row">
@@ -78,7 +78,7 @@
                                         <input name="description" value="{{ old('description') }}"  type="text" class="form-control" placeholder="Description of Dormitory">
                                     </div>
                                 </div>
-
+                                <input type="hidden" name="school_id" value="{{Qs::findActiveSchool()[0]->id}}">
                                 <div class="text-right">
                                     <button id="ajax-btn" type="submit" class="btn btn-primary">Submit form <i class="icon-paperplane ml-2"></i></button>
                                 </div>

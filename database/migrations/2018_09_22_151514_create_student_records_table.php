@@ -15,6 +15,7 @@ class CreateStudentRecordsTable extends Migration
     {
         Schema::create('student_records', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('school_id');
             $table->unsignedInteger('user_id');
             $table->unsignedInteger('my_class_id');
             $table->unsignedInteger('section_id');
@@ -22,7 +23,7 @@ class CreateStudentRecordsTable extends Migration
             $table->unsignedInteger('my_parent_id')->nullable();
             $table->unsignedInteger('dorm_id')->nullable();
             $table->string('dorm_room_no')->nullable();
-            $table->string('session');
+            $table->integer('acad_year_id');
             $table->string('house')->nullable();
             $table->tinyInteger('age')->nullable();
             $table->string('year_admitted')->nullable();

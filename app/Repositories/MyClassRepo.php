@@ -3,56 +3,59 @@
 namespace App\Repositories;
 
 use App\Models\ClassType;
+use App\Models\GradeLevels;
 use App\Models\MyClass;
+use App\Models\School;
 use App\Models\Section;
 use App\Models\Subject;
+use Qs;
 
 class MyClassRepo
 {
 
     public function all()
     {
-        return MyClass::orderBy('name', 'asc')->with('class_type')->get();
+        return GradeLevels::orderBy('title', 'asc')->where('school_id',Qs::findActiveSchool()[0]->id)->get();
     }
 
     public function getMC($data)
     {
-        return MyClass::where($data)->with('section');
+        return GradeLevels::where($data)->with('section');
     }
 
     public function find($id)
     {
-        return MyClass::find($id);
+        return GradeLevels::find($id);
     }
 
     public function create($data)
     {
-        return MyClass::create($data);
+        return GradeLevels::create($data);
     }
 
     public function update($id, $data)
     {
-        return MyClass::find($id)->update($data);
+        return GradeLevels::find($id)->update($data);
     }
 
     public function delete($id)
     {
-        return MyClass::destroy($id);
+        return GradeLevels::destroy($id);
     }
-
+// to be deleted
     public function getTypes()
     {
         return ClassType::orderBy('name', 'asc')->get();
     }
-
+// to be deleted
     public function findType($class_type_id)
     {
         return ClassType::find($class_type_id);
     }
-
+// to be deleted
     public function findTypeByClass($class_id)
     {
-        return ClassType::find($this->find($class_id)->class_type_id);
+        return $this->find($class_id)->school;
     }
 
     /************* Section *******************/

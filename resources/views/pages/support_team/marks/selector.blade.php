@@ -10,7 +10,7 @@
                                 <label for="exam_id" class="col-form-label font-weight-bold">Exam:</label>
                                 <select required id="exam_id" name="exam_id" data-placeholder="Select Exam" class="form-control select">
                                     @foreach($exams as $ex)
-                                        <option {{ $selected && $exam_id == $ex->id ? 'selected' : '' }} value="{{ $ex->id }}">{{ $ex->name }}</option>
+                                        <option {{ $selected && $exam_id == $ex->id ? 'selected' : '' }} value="{{ $ex->id }}">{{ $ex->name }} </option>
                                     @endforeach
                                 </select>
                             </div>
@@ -22,7 +22,7 @@
                                 <select required onchange="getClassSubjects(this.value)" id="my_class_id" name="my_class_id" class="form-control select">
                                     <option value="">Select Class</option>
                                     @foreach($my_classes as $c)
-                                        <option {{ ($selected && $my_class_id == $c->id) ? 'selected' : '' }} value="{{ $c->id }}">{{ $c->name }}</option>
+                                        <option {{ ($selected && $my_class_id == $c->id) ? 'selected' : '' }} value="{{ $c->id }}">{{ $c->title }}</option>
                                     @endforeach
                                 </select>
                             </div>

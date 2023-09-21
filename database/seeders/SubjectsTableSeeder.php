@@ -2,7 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\GradeLevels;
 use App\Models\MyClass;
+use App\Models\School;
 use App\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -26,7 +28,8 @@ class SubjectsTableSeeder extends Seeder
         $subjects = ['English Language', 'Mathematics'];
         $sub_slug = ['Eng', 'Math'];
         $teacher_id = User::where(['user_type' => 'teacher'])->first()->id;
-        $my_classes = MyClass::all();
+        $school_id = School::where(['active' => '1'])->first()->id;
+        $my_classes = GradeLevels::all();
 
         foreach ($my_classes as $my_class) {
 
@@ -35,6 +38,7 @@ class SubjectsTableSeeder extends Seeder
                 [
                     'name' => $subjects[0],
                     'slug' => $sub_slug[0],
+                    'school_id'=>$school_id,
                     'my_class_id' => $my_class->id,
                     'teacher_id' => $teacher_id
                 ],
@@ -42,6 +46,7 @@ class SubjectsTableSeeder extends Seeder
                 [
                     'name' => $subjects[1],
                     'slug' => $sub_slug[1],
+                    'school_id'=>$school_id,
                     'my_class_id' => $my_class->id,
                     'teacher_id' => $teacher_id
                 ],

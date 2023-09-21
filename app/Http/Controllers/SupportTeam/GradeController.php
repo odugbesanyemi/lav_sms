@@ -24,7 +24,6 @@ class GradeController extends Controller
     public function index()
     {
          $d['grades'] = $this->exam->allGrades();
-         $d['class_types'] = $this->my_class->getTypes();
         return view('pages.support_team.grades.index', $d);
     }
 

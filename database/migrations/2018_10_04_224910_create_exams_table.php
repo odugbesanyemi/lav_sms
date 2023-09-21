@@ -15,14 +15,15 @@ class CreateExamsTable extends Migration
     {
         Schema::create('exams', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('school_id');
             $table->string('name');
-            $table->tinyInteger('term');
-            $table->string('year', 40);
+            $table->tinyInteger('marking_period_id');
+            $table->integer('acad_year_id');
             $table->timestamps();
         });
 
         Schema::table('exams', function (Blueprint $table) {
-            $table->unique(['term', 'year']);
+            $table->unique(['marking_period_id', 'name']);
         });
     }
 

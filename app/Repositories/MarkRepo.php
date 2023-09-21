@@ -8,11 +8,11 @@ use App\Models\StudentRecord;
 
 class MarkRepo
 {
-    public function getGrade($total, $class_type_id)
+    public function getGrade($total, $school_id)
     {
         if($total < 1) { return NULL; }
 
-        $grades = Grade::where(['class_type_id' => $class_type_id])->get();
+        $grades = Grade::where(['school_id' => $school_id])->get();
 
         if($grades->count() > 0){
             $gr = $grades->where('mark_from', '<=', $total)->where('mark_to', '>=', $total);
@@ -23,7 +23,7 @@ class MarkRepo
 
     public function getGrade2($total)
     {
-        $grades = Grade::whereNull('class_type_id')->get();
+        $grades = Grade::whereNull('school_id')->get();
         if($grades->count() > 0){
             return $grades->where('mark_from', '<=', $total)->where('mark_to', '>=', $total)->first();
         }
