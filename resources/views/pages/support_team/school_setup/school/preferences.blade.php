@@ -1,8 +1,8 @@
 @extends('layouts.master')
 @section('page_title', 'system preferences')
 @section('content')
-<div>
-    <div class="card shadow-none" id="app">
+<div class="space-y-4">
+    <div class="card shadow-none" id="">
         <div class="card-header text-secondary bg-secondary-5 header-elements-inline py-3">
             <h6 class="card-title ">MAINTENANCE MODE</h6>
             {!! Qs::getPanelOptions() !!}
@@ -33,14 +33,14 @@
                             <div id="editor">
                                 {{ $data[0]->maintenance_message }}
                             </div>
-                            <button onclick="updatePreference(['maintenance_message',document.querySelector('#editor').textContent])" class="btn btn-secondary mt-2 w-7">Update</button>
+                            <button onclick="updatePreference(['maintenance_message',document.querySelector('#editor').textContent])" class="px-4 py-2 bg-slate-400 text-slate-50 mt-2 rounded">Update</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="card shadow-none" id="app">
+    <div class="card shadow-none" id="">
         <div class="card-header text-secondary bg-secondary-5 header-elements-inline py-3">
             <h6 class="card-title">NOTIFICATIONS</h6>
             {!! Qs::getPanelOptions() !!}
@@ -74,7 +74,7 @@
         </div>
 
     </div>
-    <div class="card shadow-none" id="app">
+    <div class="card shadow-none" id="">
         <div class="card-header text-secondary bg-secondary-5 header-elements-inline py-3">
             <h6 class="card-title">ATTENDANCE</h6>
             {!! Qs::getPanelOptions() !!}

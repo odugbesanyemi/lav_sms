@@ -20,20 +20,11 @@ class CreateMarksTable extends Migration
             $table->unsignedInteger('my_class_id');
             $table->unsignedInteger('section_id');
             $table->unsignedInteger('exam_id');
-            $table->integer('t1')->nullable();
-            $table->integer('t2')->nullable();
-            $table->integer('t3')->nullable();
-            $table->integer('t4')->nullable();
-            $table->integer('tca')->nullable();
-            $table->integer('exm')->nullable();
-            $table->integer('tex1')->nullable();
-            $table->integer('tex2')->nullable();
-            $table->integer('tex3')->nullable();
-            $table->tinyInteger('sub_pos')->nullable();
+            $table->integer('ca_score')->nullable();
+            $table->integer('exam_score')->nullable();
             $table->integer('cum')->nullable();
-            $table->string('cum_ave')->nullable();
             $table->unsignedInteger('grade_id')->nullable();
-            $table->string('year');
+            $table->unsignedInteger('acad_year_id')->nullable();
             $table->timestamps();
         });
     }

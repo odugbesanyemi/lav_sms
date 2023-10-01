@@ -55,7 +55,6 @@ class PromotionController extends Controller
     public function promote(Request $req, $fc, $fs, $tc, $ts)
     {
         $oy = Qs::getActiveAcademicYear()[0]->title; $d = [];
-        debugbar()->log($oy);
         $old_yr = explode('/', $oy);
         $ny = ++$old_yr[0].'/'.++$old_yr[1];
 

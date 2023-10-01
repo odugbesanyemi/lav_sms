@@ -9,12 +9,16 @@ use App\Models\Classrooms;
 use App\Models\GradeLevels;
 use App\Models\MarkingPeriods;
 use App\Models\School;
+use App\Models\Section;
 use App\Models\Setting;
 use App\Models\StudentRecord;
 use App\Models\Subject;
 use App\Models\system_preferences;
+use App\User;
+use Error;
 use Hashids\Hashids;
 use Illuminate\Support\Facades\Auth;
+use Session;
 
 class Qs
 
@@ -37,6 +41,11 @@ class Qs
     public static function getAppCode()
     {
         return self::getSetting('system_title') ?: 'ADM';
+    }
+
+    public static function userInfo($id)
+    {
+        return User::where('id',$id)->first();
     }
 
     public static function getDefaultUserImage()
@@ -374,13 +383,51 @@ class Qs
     }
     public static function findActiveSchool()
     {
-      return  School::Where('active',1)->get();
+        if(session('selected_school')){
+            $schoolId = session('selected_school');
+            $school = School::where('id',$schoolId)->get();
+            return $school;
+        }else{
+            return [self::getSchools()->last()];
+        }
     }
     public static function getSchools()
     {
-        $data=[];
-        $data = School::select('id', 'name','active')->get();
-        return self::userIsSuperAdmin()?$data:self::findActiveSchool();
+
+        if(self::userIsTeamSA()){
+            $data = School::select('id', 'name','active')->get();
+            return $data;
+        }elseif(self::userIsTeacher()){
+            // get all the subject teacher is having and
+            $schoolBySubjects = Subject::where('teacher_id',Auth::user()->id)->select('school_id')
+                ->distinct();
+            $schoolBySections = Section::where('teacher_id',Auth::user()->id)->select('school_id')
+                ->distinct();
+            $combinedResults = $schoolBySubjects->union($schoolBySections)->pluck('school_id')->toArray();
+            $schools = School::select('id','name','active')
+                ->whereIn('id',$combinedResults)
+                ->get();
+            return $schools;
+        }elseif(self::userIsStudent()){
+            $schoolBySr = StudentRecord::where('user_id',Auth::user()->id)->select('school_id')
+                ->pluck('school_id')
+                ->toArray();
+            $school = School::select('id','name','active')
+                ->whereIn('id',$schoolBySr)
+                ->get();
+            return $school;
+        }elseIf(self::userIsParent()){
+            // get all the children schools
+            $children = StudentRecord::where('my_parent_id', Auth::user()->id)
+                ->pluck('school_id')
+                ->toArray();
+            $school = School::select('id','name','active')
+            ->whereIn('id',$children)
+            ->get();
+            return $school;
+        }else{
+            // for users like Accountant
+        }
     }
     public static function getSchoolPreferences(){
         $id = self::findActiveSchool()[0]->id;
@@ -388,17 +435,28 @@ class Qs
     }
     public static function getAllAcademicYear(){
         $active_School_id = self::findActiveSchool()[0]->id;
-        $data = [];
         $data = AcademicCalendar::where('school_id',$active_School_id)->get();
         return self::userIsSuperAdmin()?$data:self::getActiveAcademicYear();
     }
     public static function getActiveAcademicYear(){
-        $active_School_id = self::findActiveSchool()[0]->id;
-        // return session that belongs to school and also default is true
-        $data = AcademicCalendar::where('school_id',$active_School_id)
-            ->where('default',1)
-            ->get();
-        return $data;
+        try{
+            $active_School_id = self::findActiveSchool()[0]->id;
+            // return session that belongs to school and also default is true
+            if(session('selected_calendar')== null){
+                $data = AcademicCalendar::where('school_id',$active_School_id)
+                    ->get()
+                    ->last();
+                return [$data];
+            }else{
+                $calendarId = Session::get('selected_calendar');
+                $data = AcademicCalendar::where('id',$calendarId)->get();
+                return $data;
+            }
+        }catch(\Exception $e){
+            return [];
+        }
+
+
     }
 
     public static function findAcademicYearByTitle($title){
@@ -412,20 +470,31 @@ class Qs
     }
 
     public static function getSchoolCalendarEvents(){
-        $active_School_id = self::findActiveSchool()[0]->id;
-        $active_acad_year_id = self::getActiveAcademicYear()[0]->id;
-        return CalendarEvents::where('school_id',$active_School_id)
-            ->where('acad_year_id',$active_acad_year_id)
-            ->get();
+        try{
+            $active_School_id = self::findActiveSchool()[0]->id;
+            $active_acad_year_id = self::getActiveAcademicYear()[0]->id;
+            return CalendarEvents::where('school_id',$active_School_id)
+                ->where('acad_year_id',$active_acad_year_id)
+                ->get();
+        }catch(\Exception $e){
+            return [];
+        }
+
     }
 
     public static function getSemesters(){
-        $active_School_id = self::findActiveSchool()[0]->id;
-        $active_acad_year_id = self::getActiveAcademicYear()[0]->id;
-        return MarkingPeriods::where('school_id',$active_School_id)
-        ->where('acad_year_id',$active_acad_year_id)
-        ->where('mp_type','semester')
-        ->get();
+        try{
+            $active_School_id = self::findActiveSchool()[0]->id;
+            $active_acad_year_id = self::getActiveAcademicYear()[0]->id;
+            return MarkingPeriods::where('school_id',$active_School_id)
+            ->where('acad_year_id',$active_acad_year_id)
+            ->where('mp_type','semester')
+            ->get();
+        }catch(\Exception $e)
+        {
+            // return view('pages.support_team.status');
+        }
+
     }
 
     public static function getSemesterQuaters($semesterId){
@@ -455,5 +524,9 @@ class Qs
 
     public static function getAllClassrooms(){
         return Classrooms::all();
+    }
+    public static function getSchoolGradeLevels(){
+        return GradeLevels::where('school_id',Qs::findActiveSchool()[0]->id)
+            ->get();
     }
 }

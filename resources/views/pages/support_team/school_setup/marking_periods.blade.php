@@ -8,14 +8,13 @@
         padding: 0;
     }
     .mp_view li{
-        width: 100%;
-        padding: 10px 15px;
-        border: 1px solid gainsboro;
-        margin-bottom: 5px;
+        border-left: 3px solid inherit;
+        border-right: 3px solid inherit;
+        border-radius: 5px;
+        padding: 5px 8px 5px 20px;
     }
     .mp_view li a{
         text-decoration: none;
-        color: gray;
         width: 100%;
         display: flex;
     }
@@ -24,13 +23,15 @@
         border: 1px dashed gainsboro;
         margin-bottom: 5px;
         padding: 10px;
+        border-radius:5px;
     }
-    .mp_view li:hover{
-        background-color: gainsboro;
-    }
+
+
+
 </style>
-    <div class="card shadow-none" id="mp_view">
-        <div class="card-header text-secondary bg-secondary-5 header-elements-inline py-3">
+<div class="space-y-3">
+    <div class="bg-white rounded-md shadow border-green-200 border-2 overflow-hidden" id="mp_view">
+        <div class="px-3 border-b-2 bg-gradient-to-b from-green-400 to-green-500 text-green-50 border-b-green-200 header-elements-inline py-3">
             <h6 class="card-title" id="titleDisplay"> </h6>
             {!! Qs::getPanelOptions() !!}
         </div>
@@ -98,14 +99,14 @@
                         <input type="hidden" name="parent_id" id="parent_id" >
                     </div>
                     <div class="mt-3 mr-auto">
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="submit" class="px-4 py-2 bg-gradient-to-b from-green-400 to-green-500 text-green-50 rounded flex items-center ">Submit<x-iconpark-send class="w-5 h-5"/></button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
-    <div class="card shadow-none" id="mp_edit_view">
-        <div class="card-header text-secondary bg-secondary-5 header-elements-inline py-3">
+    <div class="bg-white rounded-md shadow border-blue-200 border-2 overflow-hidden" id="mp_edit_view">
+        <div class="px-3 border-b-2 bg-gradient-to-b from-blue-400 to-blue-500 text-blue-50 border-b-blue-200 header-elements-inline py-3">
             <h6 class="card-title" id="editTitleDisplay"> </h6>
             {!! Qs::getPanelOptions() !!}
         </div>
@@ -174,61 +175,63 @@
                         <input type="hidden" name="id" id="id" >
                     </div>
                     <div class="mt-3 mr-auto">
-                        <button type="button" onclick="submitEdit()" class="btn btn-primary">Continue</button>
+                        <button type="button" onclick="submitEdit()" class="px-4 py-2 bg-gradient-to-b from-blue-400 to-blue-500 text-blue-50 rounded flex items-center gap-2">Continue <x-iconpark-send class="w-5 h-5"/></button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
-    <div class="row mp_view" >
-        <div class="col-md-6">
-            <div class="card shadow-none">
-                <div class="card-header text-secondary bg-secondary-5 header-elements-inline py-3">
-                    <h6 class="card-title">SEMESTER </h6>
+    <div class="mp_view gap-3 grid md:grid-cols-2" >
+        <div class="">
+            <div class="bg-white rounded-md shadow border-red-200 border-2 overflow-hidden">
+                <div class="px-3 text-secondary border-b-2 bg-gradient-to-b from-red-400 to-red-500 text-red-50 border-b-red-200 header-elements-inline py-3">
+                    <h6 class="card-title text-white">SEMESTER </h6>
                     {!! Qs::getPanelOptions() !!}
                 </div>
                 <div class="p-3">
                     @if (Qs::getSemesters()->count()>=1)
                     <!-- meaning there are exisiting semesters -->
 
-                        <ul >
+                        <ul class="grid grid-cols-1 gap-2   ">
                             @foreach (Qs::getSemesters() as $s )
-                                <li  class="d-flex align-items-center justify-content-between"><a onclick="editSemester('{{$s->id}}')" href="#{{ $s->title }}">{{ $s->title }}</a>
-                                <button class="btn btn-warning" onclick="editMarkingPeriod('{{$s->id}}')">edit</button>
+                                <li  class="d-flex align-items-center justify-content-between bg-red-50 shadow-inner text-red-600"><a onclick="editSemester('{{$s->id}}')" href="#{{ $s->title }}">{{ $s->title }}</a>
+                                <button class="px-3 py-1 rounded bg-gradient-to-b from-red-500 to-red-600 text-white" onclick="editMarkingPeriod('{{$s->id}}')">edit</button>
                             </li>
                             @endforeach
                         </ul>
                     @else
-                        <div class="py-1s frame-border" >
-                            <h2>No Semesters Found</h2>
+                        <div class="py-1 frame-border" >
+                            <h4 class="m-0 p-2 font-medium text-red-400">No Semesters Found</h4>
                         </div>
                     @endif
 
 
-                    <button class="btn btn-secondary" id="createSemBtn">Create New</button>
+                    <button class="px-4 py-2 rounded btn-secondary mt-3 bg-gradient-to-b from-red-400  to-red-500 text-red-50 flex items-center gap-2" id="createSemBtn">Create New <x-iconpark-send class="w-5 h-5"/></button>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-6" id="mp_quarter_view">
-            <div class="card shadow-none">
-                <div class="card-header text-secondary bg-secondary-5 header-elements-inline py-3">
-                    <h6 class="card-title" id="quarterTitle"> </h6>
+        <div class="" id="mp_quarter_view">
+            <div class="bg-white rounded-md shadow border-indigo-200 border-2 overflow-hidden">
+                <div class="px-3 text-secondary border-b-2 bg-gradient-to-b from-indigo-400 to-indigo-500 text-indigo-50 border-b-indigo-200 header-elements-inline py-3">
+                    <h6 class="card-title text-indigo-50" id="quarterTitle"> </h6>
                     {!! Qs::getPanelOptions() !!}
                 </div>
 
                 <div class="p-3" >
-                    <div id="loading">loading...</div>
+                    <div id="loading" class="py-2">loading...</div>
                     <div class="" id="quarterView">
                         <!-- <h2>No Quarters Found</h2> -->
                         <!-- <button class=""></button> -->
                     </div>
-                    <button class="btn btn-secondary" id="createSemQtrBtn">Create New</button>
+                    <button class="px-4 py-2 bg-gradient-to-b mt-3 from-indigo-400 to-indigo-500 text-indigo-50 rounded flex items-center gap-2" id="createSemQtrBtn">Create New <x-iconpark-send class="w-5 h-5"/></button>
                 </div>
             </div>
         </div>
 
     </div>
+
+</div>
 
     <script>
 
@@ -262,8 +265,8 @@
             var dataContainer;
             var dataElem;
             dataContainer = $('<ul></ul>');
-            dataElem = $('<li></li>')
-            noQuarterFound = $('<h2></h2>').text('No Quarter Found')
+            dataElem = $('<li class="rounded-full border-red-400 border-2 border"></li>')
+            noQuarterFound = $('<h4 class="m-0 text-xl font-bold p-2"></h4>').text('No Quarter Found')
             noQuarterFound.attr('class','py-1 frame-border')
 
             $('#mp_quarter_view').show('slow');
@@ -287,8 +290,8 @@
                     }else{
                         data['semester_quarter'].forEach(element => {
                             // var dataElem = $('<li></li>').text(element.title)
-                            var listItem = $('<li></li>');
-                            listItem.addClass('d-flex align-items-center justify-content-between')
+                            var listItem = $('<li class="d-flex align-items-center justify-content-between bg-indigo-50 shadow-inner"></li>');
+                            listItem.addClass('d-flex align-items-center justify-content-between rounded-2xl')
 
                             // create anchor
                             var anchor = $('<a></a>');
@@ -297,7 +300,7 @@
 
                             // create button
                             var button = $('<button></button>');
-                            button.addClass('btn btn-warning');
+                            button.addClass('px-3 py-1 rounded bg-gradient-to-b from-indigo-500 to-indigo-600 text-white');
                             button.text('edit')
                             button.click(()=>{
                                 editMarkingPeriod(element.id)

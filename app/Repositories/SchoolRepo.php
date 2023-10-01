@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Models\AcademicCalendar;
 use App\Models\School;
 use App\Models\system_preferences;
+use Qs;
 
 class SchoolRepo {
     public function createRecord ($data){
@@ -52,15 +53,13 @@ class SchoolRepo {
     }
     public function setNewActive($id)
     {
-        $currentActive = self::findActiveSchool();
+        $currentActive = Qs::findActiveSchool();
         if($currentActive[0]->id === $id)//meaning that the school is the current active so do nothing
         {
             return;
         }
-        self::changeActive();
-        $newRow = self::find($id);
-        $newRow->active = 1;
-        $newRow->save();
+        // set session variable 'selected_school'
+        session(['selected_school'=>$id]);
     }
 
     public function createAcademicYear($data)
@@ -68,30 +67,14 @@ class SchoolRepo {
         AcademicCalendar::create($data);
     }
 
-    public function ActiveSchoolAcademicYear()
-    {
-        $active_school_id = self::findActiveSchool()[0]->id;
-        return AcademicCalendar::where('default',1)
-            ->where('school_id',$active_school_id)
-            ->get();
-    }
-    public function changeAcademicYearDefault()
-    {
-        $currentActive = self::ActiveSchoolAcademicYear();
-        if($currentActive){
-            $currentActive[0]->default = 0;
-            $currentActive[0]->save();
-        }else{
-            debugbar()->log("didn't do anything");
-        }
-
-    }
 
     public function setNewAcademicYearDefault($id)
     {
-        self::changeAcademicYearDefault();
-        $newRow = AcademicCalendar::find($id);
-        $newRow->default = 1;
-        $newRow->save();
+        $activeCalendar = Qs::getActiveAcademicYear();
+        if($activeCalendar[0]->id == $id)//meaning that the calendar is the current active so do nothing
+        {
+            return;
+        }
+        session(['selected_calendar'=>$id]);
     }
 }

@@ -13,10 +13,19 @@ use App\Repositories\UserRepo;
 use App\Http\Controllers\Controller;
 use App\Models\Classrooms;
 use App\Models\GradeLevels;
+use App\Models\Section;
+use Box\Spout\Reader\Common\Creator\ReaderEntityFactory;
+use Box\Spout\Reader\CSV\Reader as CSVReader;
+use Carbon\Carbon;
+use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Support\LazyCollection;
+use League\Csv\Reader;
+use Spatie\SimpleExcel\SimpleExcelReader;
+use Request;
 
 class StudentRecordController extends Controller
 {
@@ -51,11 +60,105 @@ class StudentRecordController extends Controller
         return view('pages.support_team.students.add', $data);
     }
 
+    public function import($class_id=null)
+    {
+        $data['classes'] = Qs::getSchoolGradeLevels();
+        if($class_id){
+            $data['sections'] = Section::where('my_class_id',$class_id)->get();
+            $data['selected'] = true;
+            $data['class_id'] = $class_id;
+        }
+        return view('pages.support_team.students.import',$data);
+    }
+    public function class_selector(HttpRequest $req){
+        return redirect()->route('students.import',['class_id'=>$req->input('class_id')]);
+    }
+    public function saveImportData(HttpRequest $req){
+        // $data = $req->
+        if($req->hasFile('filename')){
+            $file = $req->file('filename');
+            $filename = $file->getClientOriginalName();
+            $path = $file->storeAs('temp',$filename);
+            $fullpath=Storage::path($path);
+            $reader=ReaderEntityFactory::createReaderFromFile($fullpath);
+            $reader->open($fullpath);
+            $isFirstRow = true;
+            $csvRows=[];
+            $headerRow =[];
+            foreach ($reader->getSheetIterator() as $sheet) {
+                foreach ($sheet->getRowIterator() as $row) {
+                    if($isFirstRow) {
+                        $headerRow = $row->toArray();
+                        $isFirstRow = false;
+                    } else {
+                        $dataRow = $row->toArray();
+                        $rowData = array_combine($headerRow, $dataRow);
+                        array_push($csvRows, $rowData);
+                    }
+                }
+            }
+            $reader->close();
+
+            if(count($csvRows)){
+                $data['student_records']=$csvRows;
+            }
+        }
+        // debugbar()->log($req->student_record);
+        if($req->student_record){
+            $data['school_id']=$req->input('school_id');
+            $data['acad_year_id']= $req->input('acad_year_id');
+            $data['section_id']= $req->input('section_id')==null?0:$req->input('section_id');
+            $data['class_id']= $req->input('class_id');
+            $sr =  $req->only(Qs::getStudentData());
+            $currentDate = Carbon::now();
+            $student_data = json_decode($req->student_record);
+            // create parent username
+            foreach ($student_data as $value) {
+                # code...
+                $su['name'] = $value->lastName.' '.$value->firstName.' '.$value->otherNames;
+                $pu['name'] = $value->lastName;
+                $su['code'] = strtoupper(Str::random(10));
+                $pu['code'] = strtoupper(Str::random(10));
+                $su['username'] = $value->admNo;
+                $su['dob'] = $value->dob;
+                $pu['username'] = $value->parent_phone;
+                $su['user_type'] = 'student';
+                $pu['user_type'] = 'parent';
+                $su['photo']= Qs::getDefaultUserImage();
+                $pu['photo']= Qs::getDefaultUserImage();
+                $su['phone'] = $value->parent_phone;
+                $pu['phone'] = $value->parent_phone;
+                $su['password'] = Hash::make('student');
+                $pu['password'] = Hash::make('parent');
+                $su['created_at']= time();
+                $pu['created_at']= time();
+                $su['updated_at'] = time();
+                $pu['updated_at'] = time();
+
+                $studentUser = $this->user->create($su);
+                $parentUser = $this->user->create($pu);
+                // student
+                $birthdate = Carbon::parse($value->dob);
+                $age = $birthdate->diffInYears($currentDate);
+                $sr['adm_no'] = $value->admNo;
+                $sr['user_id'] = $studentUser->id;
+                $sr['session'] = Qs::getSetting('current_session');
+                $sr['section_id']=$req->input('section_id')==null?Section::first()->id:$req->input('section_id');
+                $sr['my_parent_id'] = $parentUser->id;
+                $sr['my_class_id'] = $req->input('class_id');
+                $sr['age']=$age;
+                $this->student->createRecord($sr);
+            }
+            $data['msg']='ok';
+
+        }
+
+        return response()->json($data);
+    }
     public function store(StudentRecordCreate $req)
     {
        $data =  $req->only(Qs::getUserRecord());
        $sr =  $req->only(Qs::getStudentData());
-       debugbar()->log($data,$sr);
         $ct = $this->my_class->find($req->my_class_id)->short_name;
 
         $data['user_type'] = 'student';

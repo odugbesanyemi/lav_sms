@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Setup;
 
+use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class AcademicYearCreate extends FormRequest
@@ -24,8 +25,11 @@ class AcademicYearCreate extends FormRequest
     public function rules()
     {
         return [
-            'title'=> 'required|unique:academic_calendar,title',
-            'default'=> '',
+            'title'=> [
+                'required',
+                'unique:academic_calendar,title,NULL,id,school_id,' . $this->school_id,
+            ],
+            'default'=> 'nullable',
             'start_date'=>'required',
             'end_date'=>'required'
         ];

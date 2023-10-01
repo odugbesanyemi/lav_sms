@@ -2,12 +2,7 @@
 @section('page_title', 'Graduated Students')
 @section('content')
 
-<div class="card shadow-none">
-    <div class="card-header header-elements-inline py-3 bg-body-tertiary text-dark">
-        <h6 class="card-title">Students Graduated</h6>
-        {!! Qs::getPanelOptions() !!}
-    </div>
-
+<div class="">
     <div class="card-body">
         <ul class="nav nav-tabs nav-tabs-highlight">
             <li class="nav-item"><a href="#all-students" class="nav-link active" data-toggle="tab">All Graduated Students</a></li>
@@ -21,7 +16,7 @@
             </li>
         </ul>
 
-        <div class="tab-content p-md-4">
+        <div class="tab-content p-md-4 border-l border-r border-b bg-white shadow">
             <div class="tab-pane fade show active" id="all-students">
                 <table class="table datatable-button-html5-columns">
                     <thead>

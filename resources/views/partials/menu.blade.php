@@ -45,20 +45,25 @@
     }
     .sidebar-content .active{
         background: linear-gradient(to right,#2c3e5030,#2c3e5000) ;
-        color: #2c3e5090 !important;
+        color: black !important;
     }
     .sidebar-content .active iconify-icon{
         color: #2c3e50!important;
         transform: scale(110%);
         transform-origin: center;
     }
-    .sidebar-content .nav-item ul{
+    .sidebar-content .nav-item-expanded{
+        background-color: white;
         box-shadow: 0 -5px 10px #2c3e5010 inset;
+
+    }
+    .sidebar-content .nav-item ul{
+        /* box-shadow: 0 -5px 10px #2c3e5010 inset; */
     }
 </style>
 <div class="" id="sidebar-collapsible">
     <!-- Sidebar content -->
-    <div class="sidebar-content border-end overflow-y-auto bg-light text-light position-relative" style="height:calc(100vh - 60px);width:250px;">
+    <div class="sidebar-content overflow-y-auto text-light position-relative" style="height:calc(100vh - 60px);width:250px;">
         <!-- User menu -->
         <!-- <div class="sidebar-user m-0 py-1 bg-body text-dark rounded-2 p-2">
             <div class="border rounded-2">
@@ -107,14 +112,14 @@
 
                 {{--Administrative--}}
                 @if(Qs::userIsAdministrative())
-                    <li class="nav-item nav-item-submenu {{ in_array(Route::currentRouteName(), ['payments.index', 'payments.create', 'payments.invoice', 'payments.receipts', 'payments.edit', 'payments.manage', 'payments.show','setup.schools','setup.schools.create','setup.schools.preferences']) ? 'nav-item-expanded nav-item-open' : '' }} ">
+                    <li class="nav-item nav-item-submenu {{ in_array(Route::currentRouteName(), ['payments.index', 'payments.create', 'payments.invoice', 'payments.receipts', 'payments.edit', 'payments.manage', 'payments.show','setup.marking-period','setup.calendar','setup.class-periods','setup.grade-levels','setup.classrooms','setup.schools','setup.schools.create','setup.schools.preferences']) ? 'nav-item-expanded nav-item-open' : '' }} ">
                         <a href="#" class="nav-link"><iconify-icon icon="carbon:network-admin-control"></iconify-icon> <span> Administrative</span></a>
 
                         <ul class="nav-group-sub" data-submenu-title="Administrative">
 
                             {{--Payments--}}
                             @if(Qs::userIsTeamAccount())
-                            <li class="nav-item nav-item-submenu {{ in_array(Route::currentRouteName(), ['payments.index', 'payments.create', 'payments.edit', 'payments.manage', 'payments.show', 'payments.invoice']) ? 'nav-item-expanded' : '' }}">
+                            <li class="nav-item nav-item-submenu {{ in_array(Route::currentRouteName(), ['payments.index', 'payments.create', 'payments.edit', 'payments.manage', 'payments.show', 'payments.invoice','setup.marking-period','setup.calendar','setup.class-periods','setup.grade-levels','setup.classrooms','setup.schools','setup.schools.create','setup.schools.preferences']) ? 'nav-item-expanded' : '' }}">
 
                                 <a href="#" class="nav-link {{ in_array(Route::currentRouteName(), ['payments.index', 'payments.edit', 'payments.create', 'payments.manage', 'payments.show', 'payments.invoice']) ? 'active' : '' }}">Payments</a>
 
@@ -129,16 +134,16 @@
                             @endif
                             <!-- schools setup -->
                             @if (Qs::userIsTeamSA())
-                            <li class="nav-item nav-item-submenu {{ in_array(Route::currentRouteName(), ['setup.schools','setup.schools.create','setup.schools.preferences','setup.marking-period','setup.calendar','setup.class-periods','setup.grade-levels','setup.manage-classrooms','setup.schools','setup.schools.create','setup.schools.preferences']) ? 'nav-item-expanded' : '' }}">
+                            <li class="nav-item nav-item-submenu {{ in_array(Route::currentRouteName(), ['setup.schools','setup.schools.create','setup.schools.preferences','setup.marking-period','setup.calendar','setup.class-periods','setup.grade-levels','setup.classrooms','setup.schools','setup.schools.create','setup.schools.preferences','']) ? 'nav-item-expanded' : '' }}">
 
                                     <a href="#" class="nav-link {{ in_array(Route::currentRouteName(), ['setup.schools','setup.schools.create','setup.schools.preferences','setup.marking-period']) ? 'active' : '' }}">School Setup</a>
 
                                     <ul class="nav-group-sub">
-                                        <li class="nav-item"><a href="/setup/marking-period" class="nav-link {{ in_array(Route::currentRouteName(), []) ? 'active' : '' }}">Marking Periods</a></li>
-                                        <li class="nav-item"><a href="/setup/calendar" class="nav-link {{ in_array(Route::currentRouteName(), []) ? 'active' : '' }}">Manage Calendar</a></li>
-                                        <li class="nav-item"><a href="/setup/periods" class="nav-link {{ in_array(Route::currentRouteName(), []) ? 'active' : '' }}">Class Periods</a></li>
-                                        <li class="nav-item"><a href="/setup/grade-levels" class="nav-link {{ in_array(Route::currentRouteName(), []) ? 'active' : '' }}">Grade Levels</a></li>
-                                        <li class="nav-item"><a href="/setup/classrooms" class="nav-link {{ in_array(Route::currentRouteName(), []) ? 'active' : '' }}">Manage classrooms</a></li>
+                                        <li class="nav-item"><a href="/setup/marking-period" class="nav-link {{ in_array(Route::currentRouteName(), ['setup.marking-period']) ? 'active' : '' }}">Marking Periods</a></li>
+                                        <li class="nav-item"><a href="/setup/calendar" class="nav-link {{ in_array(Route::currentRouteName(), ['setup.calendar']) ? 'active' : '' }}">Manage Calendar</a></li>
+                                        <li class="nav-item"><a href="/setup/periods" class="nav-link {{ in_array(Route::currentRouteName(), ['setup.class-periods']) ? 'active' : '' }}">Class Periods</a></li>
+                                        <li class="nav-item"><a href="/setup/grade-levels" class="nav-link {{ in_array(Route::currentRouteName(), ['setup.grade-levels']) ? 'active' : '' }}">Grade Levels</a></li>
+                                        <li class="nav-item"><a href="/setup/classrooms" class="nav-link {{ in_array(Route::currentRouteName(), ['setup.classrooms']) ? 'active' : '' }}">Manage classrooms</a></li>
                                         <li class="nav-item nav-item-submenu {{in_array(Route::currentRouteName(),['setup.schools','setup.schools.create','setup.schools.preferences']) ? 'nav-item-expanded':''}} ">
                                             <a href="{{ route('payments.manage') }}" class="nav-link {{ in_array(Route::currentRouteName(), ['setup.schools','setup.schools.create','setup.schools.preferences']) ? 'active' : '' }}">School</a>
                                             <ul class="nav-group-sub">
@@ -159,7 +164,7 @@
 
                 {{--Manage Students--}}
                 @if(Qs::userIsTeamSAT())
-                    <li class="nav-item nav-item-submenu {{ in_array(Route::currentRouteName(), ['students.create', 'students.list', 'students.edit', 'students.show', 'students.promotion', 'students.promotion_manage', 'students.graduated']) ? 'nav-item-expanded nav-item-open' : '' }} ">
+                    <li class="nav-item nav-item-submenu {{ in_array(Route::currentRouteName(), ['students.create', 'students.list', 'students.edit', 'students.show','students.import', 'students.promotion', 'students.promotion_manage', 'students.graduated']) ? 'nav-item-expanded nav-item-open' : '' }} ">
                         <a href="#" class="nav-link"><iconify-icon icon="carbon:user"></iconify-icon> <span> Students</span></a>
 
                         <ul class="nav-group-sub" data-submenu-title="Manage Students">
@@ -169,15 +174,20 @@
                                     <a href="{{ route('students.create') }}"
                                        class="nav-link {{ (Route::is('students.create')) ? 'active' : '' }}">Admit Student</a>
                                 </li>
+                                <li class="nav-item">
+                                    <a href="{{ route('students.import') }}"
+                                       class="nav-link {{ (Route::is('students.import')) ? 'active' : '' }}">Import</a>
+                                </li>
                             @endif
 
                             {{--Student Information--}}
                             <li class="nav-item nav-item-submenu {{ in_array(Route::currentRouteName(), ['students.list', 'students.edit', 'students.show']) ? 'nav-item-expanded' : '' }}">
                                 <a href="#" class="nav-link {{ in_array(Route::currentRouteName(), ['students.list', 'students.edit', 'students.show']) ? 'active' : '' }}">Student Information</a>
                                 <ul class="nav-group-sub">
-                                    @foreach(App\Models\GradeLevels::orderBy('title')->get() as $c)
+                                    @foreach(Qs::getSchoolGradeLevels() as $c)
                                         <li class="nav-item"><a href="{{ route('students.list', $c->id) }}" class="nav-link ">{{ $c->title }}</a></li>
                                     @endforeach
+
                                 </ul>
                             </li>
 
@@ -297,10 +307,10 @@
                             </li>
 
                             {{--Grades list--}}
-                            <li class="nav-item">
+                            <!-- <li class="nav-item">
                                     <a href=""
                                        class="nav-link {{ in_array(Route::currentRouteName(), ['grades.index', 'grades.edit']) ? 'active' : '' }}">Manage Resource</a>
-                            </li>
+                            </li> -->
 
 
                     </ul>

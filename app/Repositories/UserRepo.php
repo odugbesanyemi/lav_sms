@@ -23,7 +23,20 @@ class UserRepo {
 
     public function create($data)
     {
-        return User::create($data);
+        try{
+            return User::firstOrCreate($data);
+        }catch(\Illuminate\Database\QueryException $e){
+            if ($e->errorInfo[1] === 1062) { // 1062 is the MySQL error code for duplicate entry
+                $existingUser = User::where('username', $data['username'])->first();
+                $existingUserId = $existingUser->id;
+                return $existingUser;
+                // Now you can use $existingUserId as needed
+                // For example, you can return it or perform additional actions
+            } else {
+                // Handle other database exceptions
+                // You might want to log the exception or provide a generic error message
+            }
+        }
     }
 
     public function getUserByType($type)

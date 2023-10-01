@@ -2,19 +2,13 @@
 @section('page_title', 'Manage Grades')
 @section('content')
 
-    <div class="card shadow-none">
-        <div class="card-header header-elements-inline py-3 bg-body-tertiary text-secondary">
-            <h6 class="card-title">Manage Grades</h6>
-            {!! Qs::getPanelOptions() !!}
-        </div>
-
-        <div class="card-body">
+        <div class="">
             <ul class="nav nav-tabs nav-tabs-highlight">
                 <li class="nav-item"><a href="#all-grades" class="nav-link active" data-toggle="tab">Manage Grades</a></li>
                 <li class="nav-item"><a href="#new-grade" class="nav-link" data-toggle="tab"><i class="icon-plus2"></i> Add Grade</a></li>
             </ul>
 
-            <div class="tab-content p-md-4">
+            <div class="tab-content p-md-4 border-l border-r border-b bg-white">
                     <div class="tab-pane fade show active" id="all-grades">
                         <table class="table datatable-button-html5-columns">
                             <thead>
@@ -119,7 +113,6 @@
                 </div>
             </div>
         </div>
-    </div>
 
     {{--Class List Ends--}}
 

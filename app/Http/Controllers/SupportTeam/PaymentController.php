@@ -25,7 +25,7 @@ class PaymentController extends Controller
     {
         $this->my_class = $my_class;
         $this->pay = $pay;
-        $this->year = Qs::getCurrentSession();
+        // $this->year = Qs::getCurrentSession();
         $this->student = $student;
 
         $this->middleware('teamAccount');
@@ -41,7 +41,7 @@ class PaymentController extends Controller
 
     public function show($year)
     {
-        $d['payments'] = $p = $this->pay->getPayment(['acad_year_id' => $year])->get();
+        $d['payments'] = $p = $this->pay->getPayment(['acad_year_id' => $year,'school_id'=>Qs::findActiveSchool()[0]->id])->get();
 
         if(($p->count() < 1)){
             return Qs::goWithDanger('payments.index');
@@ -149,7 +149,7 @@ class PaymentController extends Controller
         $d2['amt_paid'] = $req->amt_paid;
         $d2['balance'] = $bal;
         $d2['pr_id'] = $pr_id;
-        $d2['year'] = $this->year;
+        $d2['year'] = Qs::getCurrentSession();
 
         $this->pay->createReceipt($d2);
         return Qs::jsonUpdateOk();
@@ -180,8 +180,8 @@ class PaymentController extends Controller
 
         $wh['my_class_id'] = $class_id = $req->my_class_id;
 
-        $pay1 = $this->pay->getPayment(['my_class_id' => $class_id, 'acad_year_id' => $this->year])->get();
-        $pay2 = $this->pay->getGeneralPayment(['acad_year_id' => $this->year])->get();
+        $pay1 = $this->pay->getPayment(['my_class_id' => $class_id, 'acad_year_id' => Qs::getCurrentSession()])->get();
+        $pay2 = $this->pay->getGeneralPayment(['acad_year_id' => Qs::getCurrentSession()])->get();
         $payments = $pay2->count() ? $pay1->merge($pay2) : $pay1;
         $students = $this->student->getRecord($wh)->get();
 
@@ -190,7 +190,7 @@ class PaymentController extends Controller
                 foreach($students as $st){
                     $pr['student_id'] = $st->user_id;
                     $pr['payment_id'] = $p->id;
-                    $pr['year'] = $this->year;
+                    $pr['year'] = Qs::getCurrentSession();
                     $rec = $this->pay->createRecord($pr);
                     $rec->ref_no ?: $rec->update(['ref_no' => mt_rand(100000, 99999999)]);
 

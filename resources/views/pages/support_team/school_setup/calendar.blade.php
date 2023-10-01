@@ -21,7 +21,7 @@
         backdrop-filter: blur(.4);
     }
 </style>
-    <div class="position-relative">
+    <div class="position-relative space-y-4">
         <span class="overlay"></span>
         <div class="card shadow-none">
             <div class="card-header text-secondary bg-secondary-5 header-elements-inline py-3">
@@ -141,7 +141,7 @@
                 // endTime: '18:00', // an end time (6pm in this example)
             },
             events: [
-                @if(Qs::getSchoolCalendarEvents()->count() >= 1)
+                @if(Qs::getSchoolCalendarEvents() && count(Qs::getSchoolCalendarEvents()) >= 1)
                     @foreach (Qs::getSchoolCalendarEvents() as $ce )
                         {
                             title:"{{ $ce->title }}",

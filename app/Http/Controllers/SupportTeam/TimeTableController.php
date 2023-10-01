@@ -23,14 +23,14 @@ class TimeTableController extends Controller
         $this->tt = $tt;
         $this->my_class = $mc;
         $this->exam = $exam;
-        $this->year = Qs::getCurrentSession();
+        // Qs::getCurrentSession() = Qs::getCurrentSession();
     }
 
     public function index()
     {
-        $d['exams'] = $this->exam->getExam(['acad_year_id' => $this->year]);
+        $d['exams'] = $this->exam->getExam(['acad_year_id' => Qs::getCurrentSession()]);
         $d['my_classes'] = $this->my_class->all();
-        $d['markingPeriods'] = MarkingPeriods::all();
+        $d['markingPeriods'] = MarkingPeriods::where('school_id',Qs::findActiveSchool()[0]->id)->get();
         $d['tt_records'] = $this->tt->getAllRecords();
 
         return view('pages.support_team.timetables.index', $d);
@@ -159,7 +159,7 @@ class TimeTableController extends Controller
     public function edit_record($ttr_id)
     {
         $d['ttr'] = $ttr = $this->tt->findRecord($ttr_id);
-        $d['exams'] = $this->exam->getExam(['year' => $ttr->year]);
+        $d['exams'] = $this->exam->getExam(['acad_year_id' => $ttr->acad_year_id]);
         $d['markingPeriods'] = MarkingPeriods::all();
         $d['my_classes'] = $this->my_class->all();
 
@@ -237,7 +237,7 @@ class TimeTableController extends Controller
     public function store_record(TTRecordRequest $req)
     {
         $data = $req->all();
-        $data['year'] = $this->year;
+        $data['year'] = Qs::getCurrentSession();
         $this->tt->createRecord($data);
 
         return Qs::jsonStoreOk();

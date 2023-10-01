@@ -10,14 +10,13 @@
         <div class="card-body">
                 <form method="post" action="{{ route('marks.bulk_select') }}">
                     @csrf
-                    <div class="row">
-                        <div class="col-md-12">
+                    <div class="row space-y-3">
+                        <div class="">
                             <fieldset>
 
-                                <div class="row">
-
-                                    <div class="col-md-6">
-                                        <div class="form-group">
+                                <div class="grid md:grid-flow-col-dense flex-wrap items-end gap-3 ">
+                                    <div class="">
+                                        <div class="">
                                             <label for="my_class_id" class="col-form-label font-weight-bold">Class:</label>
                                             <select required onchange="getClassSections(this.value)" id="my_class_id" name="my_class_id" class="form-control select">
                                                 <option value="">Select Class</option>
@@ -28,8 +27,8 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-6">
-                                        <div class="form-group">
+                                    <div class="">
+                                        <div class="">
                                             <label for="section_id" class="col-form-label font-weight-bold">Section:</label>
                                             <select required id="section_id" name="section_id" data-placeholder="Select Class First" class="form-control select">
                                         @if($selected)
@@ -45,13 +44,11 @@
 
                             </fieldset>
                         </div>
-
-                        <div class="col-md-2 mt-4">
-                            <div class="text-right mt-1">
-                                <button type="submit" class="btn bg-primary">View Marksheets <i class="icon-paperplane ml-2"></i></button>
+                        <div class="">
+                            <div class="">
+                                <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded hover:outline-blue-200 outline-2">View Marksheets <i class="icon-paperplane ml-2"></i></button>
                             </div>
                         </div>
-
                     </div>
 
                 </form>

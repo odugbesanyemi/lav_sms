@@ -50,11 +50,11 @@ function getOrdinal($number) {
             <div class="tab-content p-md-4">
                 <div class="tab-pane fade show active p-0" id="page1">
 
-                    <div class="card-body">
+                    <div class="">
                         <form action="/marks/setup/preferences-select" method="post">
                             @csrf
-                            <div class="row">
-                                <div class="col-md-4 mb-2 mb-md-0">
+                            <div class="grid md:grid-flow-col-dense gap-3">
+                                <div class="">
                                     <select name="marking_period_id" id="chooseMP" class="form-control large">
                                     <option value="">Choose Marking Period</option>
                                         @foreach ($markingPeriods as $mp )
@@ -62,10 +62,10 @@ function getOrdinal($number) {
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="">
                                     <input type="text" class="form-control" disabled placeholder="selected Type" value="{{$selected? $markingPeriod[0]->mp_type:''}}">
                                 </div>
-                                <button type="submit" class="col-md-3 ml-auto btn btn-primary">continue</button>
+                                <button type="submit" class="btn btn-primary">continue</button>
                             </div>
                         </form>
                     </div>

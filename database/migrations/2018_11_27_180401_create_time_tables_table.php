@@ -23,7 +23,7 @@ class CreateTimeTablesTable extends Migration
             $table->integer('acad_year_id');
             $table->timestamps();
 
-            $table->unique(['my_class_id', 'exam_id', 'year']);
+            $table->unique(['my_class_id', 'exam_id', 'acad_year_id']);
         });
 
         Schema::create('time_slots', function (Blueprint $table) {

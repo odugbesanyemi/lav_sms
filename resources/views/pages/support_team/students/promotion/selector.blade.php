@@ -55,10 +55,10 @@
 
             </fieldset>
         </div>
-        <div class="row">
-            <div class="col-md-2 mt-4">
+        <div class="">
+            <div class=" mt-4">
                 <div class="text-right mt-1">
-                    <button type="submit" class="btn btn-primary">Manage Promotion <i class="icon-paperplane ml-2"></i></button>
+                    <button type="submit" class="px-4 py-2 bg-blue-500 hover:bg-blue-400 text-white flex items-center gap-2 rounded whitespace-nowrap">Manage Promotion <i class="icon-paperplane ml-2"></i></button>
                 </div>
             </div>
 

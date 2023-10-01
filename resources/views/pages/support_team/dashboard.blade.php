@@ -6,79 +6,76 @@
         display: flex !important;
     }
     .fc-header-toolbar h2{
-        font-size: 20px !important;
+        font-size: 14px !important;
     }
     .fc-header-toolbar {
         padding: 0 !;
     }
+    .fc-toolbar-chunk{
+        display: flex !important;
+        gap: 2px;
+        align-items: center;
+    }
 </style>
     @if(Qs::userIsTeamSA())
-       <div class="row mb-4 g-3">
-           <div class="col-sm-6 col-xl-3">
-               <div class="card-body border-0 bg-blue-500 has-bg-image h-100  d-flex align-items-center justify-content-center">
-                   <div class="w-100 d-flex justify-content-between">
-                       <div class="media-body">
-                           <h3 class="mb-0">{{ $users->where('user_type', 'student')->count() }}</h3>
-                           <span class="text-uppercase font-size-xs font-weight-bold">Total Students</span>
-                       </div>
+       <div class="grid lg:grid-cols-4 md:grid-cols-2 max-md:grid-cols-1 gap-3 mb-4 g-3 text-white">
+            <div class="card-body border-0 bg-blue-400 has-bg-image rounded-lg h-100 d-flex align-items-center justify-content-center">
+                <div class="w-100 d-flex justify-content-between">
+                    <div class="media-body">
+                        <h3 class="mb-0">{{ $users->where('user_type', 'student')->count() }}</h3>
+                        <span class="text-uppercase font-size-xs">Total Students</span>
+                    </div>
 
-                       <div class="ml-3 align-self-center">
-                           <i class="icon-users4 icon-3x opacity-75"></i>
-                       </div>
-                   </div>
-               </div>
-           </div>
+                    <div class="ml-3 align-self-center">
+                        <i class="icon-users4 icon-3x opacity-75"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body rounded-lg bg-red-400 has-bg-image border-0 h-100  d-flex align-items-center justify-content-center">
+                <div class="d-flex justify-content-between w-100">
+                    <div class="media-body">
+                        <h3 class="mb-0">{{ $users->where('user_type', 'teacher')->count() }}</h3>
+                        <span class="text-uppercase font-size-xs">Total Teachers</span>
+                    </div>
 
-           <div class="col-sm-6 col-xl-3">
-               <div class="card-body bg-red-500 has-bg-image border-0 h-100  d-flex align-items-center justify-content-center">
-                   <div class="d-flex justify-content-between w-100">
-                       <div class="media-body">
-                           <h3 class="mb-0">{{ $users->where('user_type', 'teacher')->count() }}</h3>
-                           <span class="text-uppercase font-size-xs">Total Teachers</span>
-                       </div>
+                    <div class="ml-3 align-self-center">
+                        <i class="icon-users2 icon-3x opacity-75"></i>
+                    </div>
+                </div>
+            </div>
 
-                       <div class="ml-3 align-self-center">
-                           <i class="icon-users2 icon-3x opacity-75"></i>
-                       </div>
-                   </div>
-               </div>
-           </div>
+            <div class="rounded-lg card-body bg-green-400 has-bg-image border-0 h-100  d-flex align-items-center justify-content-center">
+                <div class="w-100 d-flex justify-content-between">
+                    <div class="mr-3 align-self-center">
+                        <i class="icon-pointer icon-3x opacity-75"></i>
+                    </div>
 
-           <div class="col-sm-6 col-xl-3">
-               <div class="card-body bg-green-500 has-bg-image border-0 h-100  d-flex align-items-center justify-content-center">
-                   <div class="w-100 d-flex justify-content-between">
-                       <div class="mr-3 align-self-center">
-                           <i class="icon-pointer icon-3x opacity-75"></i>
-                       </div>
+                    <div class="media-body text-right">
+                        <h3 class="mb-0">{{ $users->where('user_type', 'admin')->count() }}</h3>
+                        <span class="text-uppercase font-size-xs">Total Administrators</span>
+                    </div>
+                </div>
+            </div>
 
-                       <div class="media-body text-right">
-                           <h3 class="mb-0">{{ $users->where('user_type', 'admin')->count() }}</h3>
-                           <span class="text-uppercase font-size-xs">Total Administrators</span>
-                       </div>
-                   </div>
-               </div>
-           </div>
+            <div class="rounded-lg card-body bg-indigo-400 has-bg-image border-0 h-100 d-flex align-items-center justify-content-center">
+                <div class="w-100 d-flex justify-content-between">
+                    <div class="mr-3 align-self-center">
+                        <i class="icon-user icon-3x opacity-75"></i>
+                    </div>
 
-           <div class="col-sm-6 col-xl-3">
-               <div class="card-body bg-indigo-500 has-bg-image border-0 h-100 d-flex align-items-center justify-content-center">
-                   <div class="w-100 d-flex justify-content-between">
-                       <div class="mr-3 align-self-center">
-                           <i class="icon-user icon-3x opacity-75"></i>
-                       </div>
+                    <div class="media-body text-right">
+                        <h3 class="mb-0">{{ $users->where('user_type', 'parent')->count() }}</h3>
+                        <span class="text-uppercase font-size-xs">Total Parents</span>
+                    </div>
+                </div>
+            </div>
 
-                       <div class="media-body text-right">
-                           <h3 class="mb-0">{{ $users->where('user_type', 'parent')->count() }}</h3>
-                           <span class="text-uppercase font-size-xs">Total Parents</span>
-                       </div>
-                   </div>
-               </div>
-           </div>
        </div>
        @endif
 
     {{--Events Calendar Begins--}}
     <div class="card border-1 border shadow-none">
-        <div class="card-header p-3 header-elements-inline bg-body-tertiary text-secondary">
+        <div class="card-header p-3 header-elements-inline bg-body-tertiary text-black">
             <h5 class="card-title">School Events Calendar</h5>
          {!! Qs::getPanelOptions() !!}
         </div>
@@ -121,7 +118,7 @@
                 // endTime: '18:00', // an end time (6pm in this example)
             },
             events: [
-                @if(Qs::getSchoolCalendarEvents()->count() >= 1)
+                @if(count(Qs::getSchoolCalendarEvents()) >= 1)
                     @foreach (Qs::getSchoolCalendarEvents() as $ce )
                         {
                             title:"{{ $ce->title }}",

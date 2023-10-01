@@ -8,6 +8,8 @@
         "php": "^7.2||^8.0",
         "barryvdh/laravel-dompdf": "^0.8.3",
         "blade-ui-kit/blade-icons": "^1.5",
+        "codeat3/blade-bytesize-icons": "^1.4",
+        "codeat3/blade-iconpark": "^1.5",
         "fakerphp/faker": "^1.14",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
@@ -16,6 +18,8 @@
         "laravel/framework": "^8.40",
         "laravel/tinker": "^2.5",
         "laravel/ui": "^3.0",
+        "league/csv": "^9.8",
+        "spatie/simple-excel": "^1.13",
         "twbs/bootstrap-icons": "^1.10"
     },
     "require-dev": {

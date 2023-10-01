@@ -1,15 +1,13 @@
 @extends('layouts.master')
 @section('page_title', 'Manage Promotions')
 @section('content')
-
+<div class="gap-3 space-y-3">
     {{--Reset All--}}
     <div class="card shadow-none">
-        <div class="card-body text-center
-">
+        <div class="card-body text-center">
             <button id="promotion-reset-all" class="btn btn-danger btn-large">Reset All Promotions for the Session</button>
         </div>
     </div>
-
 {{-- Reset Promotions --}}
     <div class="card shadow-none">
         <div class="card-header header-elements-inline py-3 bg-body-tertiary text-dark">
@@ -56,6 +54,9 @@
             </table>
         </div>
     </div>
+</div>
+
+
 
 @endsection
 

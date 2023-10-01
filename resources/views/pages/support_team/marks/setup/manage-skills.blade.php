@@ -28,86 +28,74 @@
         </div>
 
         <div class="card-body">
-            <ul class="nav nav-tabs nav-tabs-highlight">
-                <li class="nav-item"><a href="#all-grade_levels" class="nav-link active" data-toggle="tab">Skills</a></li>
-            </ul>
 
-            <div class="tab-content p-md-4">
-                <div class="tab-pane fade show active" id="all-grade_levels">
-                    <form action="/marks/setup/add-skill" method="post" >
-                        @csrf @method('post')
-                        <div class="" style="overflow-x: auto;" >
-                            <table class="table">
-                                <thead>
+            <form action="/marks/setup/add-skill" method="post" >
+                @csrf @method('post')
+                <div class="" style="overflow-x: auto;" >
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>S/N</th>
+                            <th>Name</th>
+                            <th>Skill Type</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                            @foreach ($skills as $sk )
                                 <tr>
-                                    <th>S/N</th>
-                                    <th>Name</th>
-                                    <th>Skill Type</th>
-                                    <th>Actions</th>
-                                </tr>
-                                </thead>
-                                <tbody>
+                                    <td>{{$loop->iteration}}</td>
+                                    <td>
+                                        <input type="text" name="name" id="edit_name" class="edit_input" value="{{$sk->name}}" onchange="updateRecord(this,'{{$sk->id}}')">
+                                    </td>
+                                    <td>
+                                        <select name="skill_type" class="edit_input" id="" onchange="updateRecord(this,'{{$sk->id}}')">
+                                            @foreach ($skills->pluck('skill_type')->unique() as $skillType )
+                                                <option {{ $sk->skill_type == $skillType?'selected':'' }} value="{{ $skillType }}">{{$skillType=='AF'?"AFFECTIVE":"PSYCHOMOTOR"}}</option>
+                                            @endforeach
+                                        </select>
+                                        <!-- <input type="text" name="skill_type" id="edit_skill_type" class="edit_input" value="{{$sk->skill_type=='AF'?'AFFECTIVE':'PSYCHOMOTOR'}}" onchange="updateRecord(this,'{{$sk->id}}')"> -->
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="list-icons">
+                                            <div class="dropdown">
+                                                <a href="#" class="list-icons-item" data-toggle="dropdown">
+                                                    <i class="icon-menu9"></i>
+                                                </a>
 
-                                    @foreach ($skills as $sk )
-                                        <tr>
-                                            <td>{{$loop->iteration}}</td>
-                                            <td>
-                                                <input type="text" name="name" id="edit_name" class="edit_input" value="{{$sk->name}}" onchange="updateRecord(this,'{{$sk->id}}')">
-                                            </td>
-                                            <td>
-                                                <select name="skill_type" class="edit_input" id="" onchange="updateRecord(this,'{{$sk->id}}')">
-                                                    @foreach ($skills->pluck('skill_type')->unique() as $skillType )
-                                                        <option {{ $sk->skill_type == $skillType?'selected':'' }} value="{{ $skillType }}">{{$skillType=='AF'?"AFFECTIVE":"PSYCHOMOTOR"}}</option>
-                                                    @endforeach
-                                                </select>
-                                                <!-- <input type="text" name="skill_type" id="edit_skill_type" class="edit_input" value="{{$sk->skill_type=='AF'?'AFFECTIVE':'PSYCHOMOTOR'}}" onchange="updateRecord(this,'{{$sk->id}}')"> -->
-                                            </td>
-                                            <td class="text-center">
-                                                <div class="list-icons">
-                                                    <div class="dropdown">
-                                                        <a href="#" class="list-icons-item" data-toggle="dropdown">
-                                                            <i class="icon-menu9"></i>
-                                                        </a>
-
-                                                        <div class="dropdown-menu dropdown-menu-left">
-                                                                @if(Qs::userIsSuperAdmin())
-                                                            {{--Delete--}}
-                                                            <a id="{{$sk->id}}" onclick="confirmDelete(this.id)" href="#" class="dropdown-item"><i class="icon-trash"></i> Delete</a>
-                                                            <form method="post" id="item-delete-{{ $sk->id }}" action="/marks/setup/delete/{{ $sk->id }}" class="hidden">@csrf </form>
-                                                                @endif
-                                                        </div>
-                                                    </div>
+                                                <div class="dropdown-menu dropdown-menu-left">
+                                                        @if(Qs::userIsSuperAdmin())
+                                                    {{--Delete--}}
+                                                    <a id="{{$sk->id}}" onclick="confirmDelete(this.id)" href="#" class="dropdown-item"><i class="icon-trash"></i> Delete</a>
+                                                    <form method="post" id="item-delete-{{ $sk->id }}" action="/marks/setup/delete/{{ $sk->id }}" class="hidden">@csrf </form>
+                                                        @endif
                                                 </div>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                        <tr>
-                                            <td>+</td>
-                                            <td><input type="text" name="name" id="name" class="edit_input_show form-control" value="" placeholder="Skill Name"></td>
-                                            <td>
-                                                <select name="skill_type" class="form-control" id="skill_type">
-                                                    <option value="0">Select Skill Type</option>
-                                                    @foreach ($skills->pluck('skill_type')->unique() as $skillType )
-                                                        <option value="{{ $skillType}}">{{$skillType=='AF'?"AFFECTIVE":"PSYCHOMOTOR"}}</option>
-                                                    @endforeach
-                                                </select>
-                                            </td>
-                                            <input type="hidden" name="school_id" value="{{ Qs::findActiveSchool()[0]->id }}">
-                                        </tr>
-                                </tbody>
-                            </table>
-
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <button type="submit" class="btn btn-primary">Save</button>
-                            </div>
-                        </div>
-                    </form>
-
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforeach
+                                <tr>
+                                    <td>+</td>
+                                    <td><input type="text" name="name" id="name" class="edit_input_show form-control" value="" placeholder="Skill Name"></td>
+                                    <td>
+                                        <select name="skill_type" class="form-control" id="skill_type">
+                                            <option value="0">Select Skill Type</option>
+                                            @foreach ($skills->pluck('skill_type')->unique() as $skillType )
+                                                <option value="{{ $skillType}}">{{$skillType=='AF'?"AFFECTIVE":"PSYCHOMOTOR"}}</option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+                                    <td><button type="submit" class="btn btn-primary">Save</button></td>
+                                    <input type="hidden" name="school_id" value="{{ Qs::findActiveSchool()[0]->id }}">
+                                </tr>
+                        </tbody>
+                    </table>
 
                 </div>
-            </div>
+
+            </form>
         </div>
     </div>
     <script>

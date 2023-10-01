@@ -10,13 +10,13 @@
         <div class="card-body">
             <form class="ajax-update" method="post" action="{{ route('marks.batch_update') }}">
                 @csrf @method('PUT')
-                <div class="row">
-                    <div class="col-md-10">
+                <div class="space-y-3">
+                    <div class="">
                         <fieldset>
 
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <div class="form-group">
+                            <div class="grid lg:grid-flow-col-dense md:grid-cols-2 flex-wrap items-end gap-3">
+                                <div class="">
+                                    <div class="">
                                         <label for="exam_id" class="col-form-label font-weight-bold">Exam:</label>
                                         <select required id="exam_id" name="exam_id" data-placeholder="Select Exam" class="form-control select">
                                             @foreach($exams as $ex)
@@ -26,8 +26,8 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-4">
-                                    <div class="form-group">
+                                <div class="">
+                                    <div class="">
                                         <label for="my_class_id" class="col-form-label font-weight-bold">Class:</label>
                                         <select required onchange="getClassSections(this.value)" id="my_class_id" name="my_class_id" class="form-control select">
                                             <option value="">Select Class</option>
@@ -38,8 +38,8 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-4">
-                                    <div class="form-group">
+                                <div class="">
+                                    <div class="">
                                         <label for="section_id" class="col-form-label font-weight-bold">Section:</label>
                                         <select required id="section_id" name="section_id" data-placeholder="Select Class First" class="form-control select">
                                             @if($selected)
@@ -56,8 +56,8 @@
                         </fieldset>
                     </div>
 
-                    <div class="col-md-2 mt-4">
-                        <div class="text-right mt-1">
+                    <div class="">
+                        <div class="">
                             <button type="submit" class="btn btn-danger">Fix Errors <i class="icon-wrench2 ml-2"></i></button>
                         </div>
                     </div>

@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Resource extends Model
 {
     protected $table = 'resource';
-    protected $fillable = ['title','resource_type_id','description','school_id','acad_year_id','filename','image'];
+    protected $fillable = ['title','resource_type_id','description','subject_id','added_by','school_id','acad_year_id','filename','image'];
 
     use HasFactory;
     public function students(){

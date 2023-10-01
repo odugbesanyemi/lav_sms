@@ -39,7 +39,6 @@ class setupController extends Controller
     //schools
     public function create_school()
     {
-
         $data = [];
         $data['nationals'] = $this->loc->getAllNationals();
         $data['states'] = $this->loc->getStates();
@@ -49,8 +48,6 @@ class setupController extends Controller
 
     public function update_school(SchoolRecordUpdate $req, $school_id)
     {
-        debugbar()->log('reach here',$school_id);
-
         $school = $this->school->find(($school_id));
         $data = $req->only(['name','address','email','principal','phone','telephone','nationality','state','lga','logo','active']);
         $active = $req->has('active') && $req->input('active') === 'on' ? 1 : 0;
@@ -59,7 +56,6 @@ class setupController extends Controller
             // meaning we want to remove other active schools
             $this->school->setNewActive($school_id);
         }
-        debugbar()->log('reach here',$data);
         $school->fill($data);
         $school->save();
         return back()->with('flash_success',__('msg.update_ok'));
@@ -91,7 +87,7 @@ class setupController extends Controller
 
     public function school_store(SchoolRecordCreate $req)
     {
-        $data = $req->only(['name','address','email','principal','phone','telephone','nationality','state','lga','logo','active']);
+        $data = $req->only(['name','address','email','principal','phone','telephone','nationality','state','lga','logo','active','generic_name']);
         $active = $req->has('active') && $req->input('active') === 'on' ? 1 : 0;
         $data['active'] = $active;
         $data['maintenance']=0;
@@ -110,8 +106,8 @@ class setupController extends Controller
     // pages
     public function calendar()
     {
-        $data = $this->school->ActiveSchoolAcademicYear();
-        return view('pages.support_team.school_setup.calendar',$data);
+        // $data = $this->school->ActiveSchoolAcademicYear();
+        return view('pages.support_team.school_setup.calendar');
     }
     public function periods()
     {
@@ -135,8 +131,8 @@ class setupController extends Controller
         $data['nationals'] = $this->loc->getAllNationals();
         $data['states'] = $this->loc->getStates();
         $data['schools'] = $this->school->all();
-        $data['activeSchool']=$this->school->findActiveSchool();
-        if($data['activeSchool']->count() == 0)
+        $data['activeSchool']=Qs::findActiveSchool();
+        if(count($data['activeSchool']) == 0)
         {
             return redirect('/setup/schools/create')->with('flash_warning','No School Registered');
         }
@@ -167,7 +163,7 @@ class setupController extends Controller
     public function createCalendarEvents(CalendarEventsCreate $req){
         $data = $req->all();
         $active_school = Qs::findActiveSchool();
-        $active_acad_year = $this->school->ActiveSchoolAcademicYear();
+        $active_acad_year = Qs::getActiveAcademicYear();
         $data['school_id']=$active_school[0]->id;
         $data['acad_year_id']=$active_acad_year[0]->id;
         CalendarEvents::create($data);
@@ -186,11 +182,8 @@ class setupController extends Controller
         return response()->json(Qs::getMarkingPeriod($mp_id));
     }
     public function MarkingPeriodEdit(Request $req){
-        debugbar()->log($req->data['id']);
         $id =$req->data['id'];
         $markingPeriod= Qs::getMarkingPeriod($id);
-        debugbar()->log($req->data);
-
         $markingPeriod[0]->fill($req->data);
         $markingPeriod[0]->save();
         return back()->with('flash_success',__('msg.update_ok'));
@@ -242,5 +235,10 @@ class setupController extends Controller
         $room = Classrooms::find($room_id);
         $room->delete();
         return back()->with('flash_success',__('msg.del_ok'));
+    }
+
+    public function status($error_module_name){
+        $data['name']=$error_module_name;
+        return view('pages.support_team.status',$data);
     }
 }

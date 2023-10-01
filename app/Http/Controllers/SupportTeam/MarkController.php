@@ -29,15 +29,15 @@ class MarkController extends Controller
         $this->mark =  $mark;
         $this->student =  $student;
         $this->my_class =  $my_class;
-        $this->year =  Qs::getActiveAcademicYear()[0]->id;
+        // Qs::getActiveAcademicYear()[0]->id =  Qs::getActiveAcademicYear()[0]->id;
 
-       // $this->middleware('teamSAT', ['except' => ['show', 'year_selected', 'year_selector', 'print_view'] ]);
+    //    $this->middleware('teamSAT', ['except' => ['show', 'year_selected', 'year_selector', 'print_view'] ]);
     }
 
     public function index()
     {
         // we pass the following data to the index page which is then used for the selector
-        $d['exams'] = $this->exam->getExam(['acad_year_id' => $this->year]);
+        $d['exams'] = $this->exam->getExam(['acad_year_id' => Qs::getActiveAcademicYear()[0]->id]);
         $d['my_classes'] = $this->my_class->all();
         $d['sections'] = $this->my_class->getAllSections();
         $d['subjects'] = $this->my_class->getAllSubjects();
@@ -148,7 +148,7 @@ class MarkController extends Controller
         $data = $req->only(['exam_id', 'my_class_id', 'section_id', 'subject_id']);
         $d2 = $req->only(['exam_id', 'my_class_id', 'section_id']);
         $d = $req->only(['my_class_id', 'section_id']);
-        $d['acad_year_id'] = $data['acad_year_id'] = $d2['year'] = $this->year;
+        $d['acad_year_id'] = $data['acad_year_id'] = $d2['year'] = Qs::getActiveAcademicYear()[0]->id;
 
         $students = $this->student->getRecord($d)->get();
         if($students->count() < 1){
@@ -166,7 +166,7 @@ class MarkController extends Controller
 
     public function manage($exam_id, $class_id, $section_id, $subject_id)
     {
-        $d = ['exam_id' => $exam_id, 'my_class_id' => $class_id, 'section_id' => $section_id, 'subject_id' => $subject_id, 'acad_year_id' => $this->year];
+        $d = ['exam_id' => $exam_id, 'my_class_id' => $class_id, 'section_id' => $section_id, 'subject_id' => $subject_id, 'acad_year_id' => Qs::getActiveAcademicYear()[0]->id];
 
         $d['marks'] = $this->exam->getMark($d);
         if($d['marks']->count() < 1){
@@ -189,7 +189,7 @@ class MarkController extends Controller
 
     public function update(Request $req, $exam_id, $class_id, $section_id, $subject_id)
     {
-        $p = ['exam_id' => $exam_id, 'my_class_id' => $class_id, 'section_id' => $section_id, 'subject_id' => $subject_id, 'acad_year_id' => $this->year];
+        $p = ['exam_id' => $exam_id, 'my_class_id' => $class_id, 'section_id' => $section_id, 'subject_id' => $subject_id, 'acad_year_id' => Qs::getActiveAcademicYear()[0]->id];
 
         $d = $d3 = $all_st_ids = [];
 
@@ -228,10 +228,10 @@ class MarkController extends Controller
         // foreach ($all_st_ids as $st_id) {
 
         //     $p['student_id'] =$st_id;
-        //     $d3['total'] = $this->mark->getExamTotalTerm($exam, $st_id, $class_id, $this->year);
-        //     $d3['ave'] = $this->mark->getExamAvgTerm($exam, $st_id, $class_id, $section_id, $this->year);
-        //     $d3['class_ave'] = $this->mark->getClassAvg($exam, $class_id, $this->year);
-        //     $d3['pos'] = $this->mark->getPos($st_id, $exam, $class_id, $section_id, $this->year);
+        //     $d3['total'] = $this->mark->getExamTotalTerm($exam, $st_id, $class_id, Qs::getActiveAcademicYear()[0]->id);
+        //     $d3['ave'] = $this->mark->getExamAvgTerm($exam, $st_id, $class_id, $section_id, Qs::getActiveAcademicYear()[0]->id);
+        //     $d3['class_ave'] = $this->mark->getClassAvg($exam, $class_id, Qs::getActiveAcademicYear()[0]->id);
+        //     $d3['pos'] = $this->mark->getPos($st_id, $exam, $class_id, $section_id, Qs::getActiveAcademicYear()[0]->id);
 
         //     $this->exam->updateRecord($p, $d3);
         // }
@@ -242,7 +242,7 @@ class MarkController extends Controller
 
     public function batch_fix()
     {
-        $d['exams'] = $this->exam->getExam(['acad_year_id' => $this->year]);
+        $d['exams'] = $this->exam->getExam(['acad_year_id' => Qs::getActiveAcademicYear()[0]->id]);
         $d['my_classes'] = $this->my_class->all();
         $d['sections'] = $this->my_class->getAllSections();
         $d['selected'] = false;
@@ -256,7 +256,7 @@ class MarkController extends Controller
         $class_id = $req->my_class_id;
         $section_id = $req->section_id;
 
-        $w = ['exam_id' => $exam_id, 'my_class_id' => $class_id, 'section_id' => $section_id, 'acad_year_id' => $this->year];
+        $w = ['exam_id' => $exam_id, 'my_class_id' => $class_id, 'section_id' => $section_id, 'acad_year_id' => Qs::getActiveAcademicYear()[0]->id];
 
         $exam = $this->exam->find($exam_id);
         $exrs = $this->exam->getRecord($w);
@@ -273,8 +273,8 @@ class MarkController extends Controller
             $d['grade_id'] = $this->mark->getGrade($total, $class_type->id);
 
             /*      if($exam->term == 3){
-                      $d['cum'] = $this->mark->getSubCumTotal($total, $mk->student_id, $mk->subject_id, $class_id, $this->year);
-                      $d['cum_ave'] = $cav = $this->mark->getSubCumAvg($total, $mk->student_id, $mk->subject_id, $class_id, $this->year);
+                      $d['cum'] = $this->mark->getSubCumTotal($total, $mk->student_id, $mk->subject_id, $class_id, Qs::getActiveAcademicYear()[0]->id);
+                      $d['cum_ave'] = $cav = $this->mark->getSubCumAvg($total, $mk->student_id, $mk->subject_id, $class_id, Qs::getActiveAcademicYear()[0]->id);
                       $grade = $this->mark->getGrade(round($mk->cum_ave), $class_type->id);
                   }*/
 
@@ -288,10 +288,10 @@ class MarkController extends Controller
 
             $st_id = $exr->student_id;
 
-            $d3['total'] = $this->mark->getExamTotalTerm($exam, $st_id, $class_id, $this->year);
-            $d3['ave'] = $this->mark->getExamAvgTerm($exam, $st_id, $class_id, $section_id, $this->year);
-            $d3['class_ave'] = $this->mark->getClassAvg($exam, $class_id, $this->year);
-            $d3['pos'] = $this->mark->getPos($st_id, $exam, $class_id, $section_id, $this->year);
+            $d3['total'] = $this->mark->getExamTotalTerm($exam, $st_id, $class_id, Qs::getActiveAcademicYear()[0]->id);
+            $d3['ave'] = $this->mark->getExamAvgTerm($exam, $st_id, $class_id, $section_id, Qs::getActiveAcademicYear()[0]->id);
+            $d3['class_ave'] = $this->mark->getClassAvg($exam, $class_id, Qs::getActiveAcademicYear()[0]->id);
+            $d3['pos'] = $this->mark->getPos($st_id, $exam, $class_id, $section_id, Qs::getActiveAcademicYear()[0]->id);
 
             $this->exam->updateRecord(['id' => $exr->id], $d3);
         }
@@ -348,12 +348,12 @@ class MarkController extends Controller
     public function tabulation($exam_id = NULL, $class_id = NULL, $section_id = NULL)
     {
         $d['my_classes'] = $this->my_class->all();
-        $d['exams'] = $this->exam->getExam(['acad_year_id' => $this->year]);
+        $d['exams'] = $this->exam->getExam(['acad_year_id' => Qs::getActiveAcademicYear()[0]->id]);
         $d['selected'] = FALSE;
 
         if($class_id && $exam_id && $section_id){
 
-            $wh = ['my_class_id' => $class_id, 'section_id' => $section_id, 'exam_id' => $exam_id, 'acad_year_id' => $this->year];
+            $wh = ['my_class_id' => $class_id, 'section_id' => $section_id, 'exam_id' => $exam_id, 'acad_year_id' => Qs::getActiveAcademicYear()[0]->id];
 
             $sub_ids = $this->mark->getSubjectIDs($wh);
             $st_ids = $this->mark->getStudentIDs($wh);
@@ -370,9 +370,9 @@ class MarkController extends Controller
             $d['my_class_id'] = $class_id;
             $d['section_id'] = $section_id;
             $d['exam_id'] = $exam_id;
-            $d['year'] = $this->year;
+            $d['year'] = Qs::getActiveAcademicYear()[0]->id;
             $d['marks'] = $mks = $this->exam->getMark($wh);
-            $wh['year']=$this->year;
+            $wh['year']=Qs::getActiveAcademicYear()[0]->id;
             unset($wh['acad_year_id']);
             $d['exr'] = $exr = $this->exam->getRecord($wh);
 
@@ -389,7 +389,7 @@ class MarkController extends Controller
 
     public function print_tabulation($exam_id, $class_id, $section_id)
     {
-        $wh = ['my_class_id' => $class_id, 'section_id' => $section_id, 'exam_id' => $exam_id, 'acad_year_id' => $this->year];
+        $wh = ['my_class_id' => $class_id, 'section_id' => $section_id, 'exam_id' => $exam_id, 'acad_year_id' => Qs::getActiveAcademicYear()[0]->id];
         $sub_ids = $this->mark->getSubjectIDs($wh);
         $st_ids = $this->mark->getStudentIDs($wh);
 
@@ -402,7 +402,7 @@ class MarkController extends Controller
 
         $d['my_class_id'] = $class_id;
         $d['exam_id'] = $exam_id;
-        $d['year'] = $this->year;
+        $d['year'] = Qs::getActiveAcademicYear()[0]->id;
         $wh = ['exam_id' => $exam_id, 'my_class_id' => $class_id];
 
         $d['marks'] = $mks = $this->exam->getMark($wh);

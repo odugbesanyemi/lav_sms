@@ -3,19 +3,15 @@
 @section('content')
 
 
-    <div class="card shadow-none" id="app">
-        <div class="card-header bg-secondary-5 text-secondary header-elements-inline py-3">
-            <h6 class="card-title">Manage Schools</h6>
-            {!! Qs::getPanelOptions() !!}
-        </div>
+    <div >
 
-        <div class="card-body">
+        <div class="card-body bg-white">
             <ul class="nav nav-tabs nav-tabs-highlight">
                 <li class="nav-item"><a href="#new-school" class="nav-link active" data-toggle="tab">Create New School</a></li>
                 <li class="nav-item" id="viewSchool"><a href="#view" class="nav-link" data-toggle="tab" >View Schools</a></li>
             </ul>
 
-            <div class="tab-content p-md-4">
+            <div class="tab-content p-md-4 border-b border-l border-r border-t-0">
                 <div class="tab-pane fade show active" id="new-school">
                     <form method="post" enctype="multipart/form-data" class="wizard-form steps-validation ajax-store" action="{{route('setup.schools.new')}}" data-fouc>
                         @csrf
@@ -108,15 +104,15 @@
                             <div class="row mt-3 d-flex align-items-center ">
 
                                 {{-- options --}}
-                                <div class="col-md-4">
-                                    <input type="checkbox" name="active" checked id="setActive">
+                                <!-- <div class="col-md-4">
+                                    <input type="checkbox" name="active" id="setActive">
                                     <label for="setActive">set as Active</label>
-                                </div>
+                                </div> -->
                                 {{--PASSPORT--}}
                                 <div class="col-md-8">
                                     <div class="form-group">
                                         <label class="d-block">Upload school logo:</label>
-                                        <input value="" accept="image/*" type="file" name="photo" class="form-input-styled" data-fouc>
+                                        <input value="" accept="image/*" type="file" name="photo" class="" data-fouc>
                                         <span class="form-text text-muted">Accepted Images: jpeg, png. Max file size 2Mb</span>
                                     </div>
                                 </div>

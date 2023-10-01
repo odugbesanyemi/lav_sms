@@ -2,13 +2,9 @@
 @section('page_title', 'Manage Users')
 @section('content')
 
-    <div class="card shadow-none">
-        <div class="card-header header-elements-inline py-3 bg-body-tertiary text-dark">
-            <h6 class="card-title">Manage Users</h6>
-            {!! Qs::getPanelOptions() !!}
-        </div>
+    <div class="">
 
-        <div class="card-body">
+        <div class="">
             <ul class="nav nav-tabs nav-tabs-highlight">
                 <li class="nav-item"><a href="#new-user" class="nav-link active" data-toggle="tab">Create New User</a></li>
                 <li class="nav-item dropdown">
@@ -21,7 +17,7 @@
                 </li>
             </ul>
 
-            <div class="tab-content p-md-4">
+            <div class="tab-content p-md-4 border-l border-r border-b bg-white shadow">
                 <div class="tab-pane fade show active" id="new-user">
                     <form method="post" enctype="multipart/form-data" class="wizard-form steps-validation ajax-store" action="{{ route('users.store') }}" data-fouc>
                         @csrf
@@ -163,7 +159,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="d-block">Upload Passport Photo:</label>
-                                        <input value="{{ old('photo') }}" accept="image/*" type="file" name="photo" class="form-input-styled" data-fouc>
+                                        <input value="{{ old('photo') }}" accept="image/*" type="file" name="photo" class="" data-fouc>
                                         <span class="form-text text-muted">Accepted Images: jpeg, png. Max file size 2Mb</span>
                                     </div>
                                 </div>

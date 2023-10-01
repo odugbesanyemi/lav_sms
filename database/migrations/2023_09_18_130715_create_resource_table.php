@@ -20,6 +20,8 @@ class CreateResourceTable extends Migration
             $table->string('description')->nullable();
             $table->integer('school_id');
             $table->integer('acad_year_id');
+            $table->integer('subject_id');
+            $table->integer('added_by');
             $table->string('filename');
             $table->string('image')->nullable();
             $table->timestamps();

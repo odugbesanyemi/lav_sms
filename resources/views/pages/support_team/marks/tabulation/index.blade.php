@@ -8,35 +8,35 @@
         </div>
 
         <div class="card-body">
-        <form method="post" action="{{ route('marks.tabulation_select') }}">
+        <form method="post" action="{{ route('marks.tabulation_select') }}" class="space-y-3">
                     @csrf
-                    <div class="row">
+                    <div class="grid grid-flow-col-dense flex-wrap items-end gap-3">
 
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label for="exam_id" class="col-form-label font-weight-bold">Exam:</label>
-                                            <select required id="exam_id" name="exam_id" class="form-control select" data-placeholder="Select Exam">
-                                                @foreach($exams as $exm)
-                                                    <option {{ ($selected && $exam_id == $exm->id) ? 'selected' : '' }} value="{{ $exm->id }}">{{ $exm->name }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
+                        <div class="">
+                            <div class="">
+                                <label for="exam_id" class="col-form-label font-weight-bold">Exam:</label>
+                                <select required id="exam_id" name="exam_id" class="form-control select" data-placeholder="Select Exam">
+                                    @foreach($exams as $exm)
+                                        <option {{ ($selected && $exam_id == $exm->id) ? 'selected' : '' }} value="{{ $exm->id }}">{{ $exm->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
 
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label for="my_class_id" class="col-form-label font-weight-bold">Class:</label>
-                                            <select onchange="getClassSections(this.value)" required id="my_class_id" name="my_class_id" class="form-control select" data-placeholder="Select Class">
-                                                <option value=""></option>
-                                                @foreach($my_classes as $c)
-                                                    <option {{ ($selected && $my_class_id == $c->id) ? 'selected' : '' }} value="{{ $c->id }}">{{ $c->title }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
+                        <div class="">
+                            <div class="">
+                                <label for="my_class_id" class="col-form-label font-weight-bold">Class:</label>
+                                <select onchange="getClassSections(this.value)" required id="my_class_id" name="my_class_id" class="form-control select" data-placeholder="Select Class">
+                                    <option value=""></option>
+                                    @foreach($my_classes as $c)
+                                        <option {{ ($selected && $my_class_id == $c->id) ? 'selected' : '' }} value="{{ $c->id }}">{{ $c->title }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
 
-                        <div class="col-md-3">
-                            <div class="form-group">
+                        <div class="">
+                            <div class="">
                                 <label for="section_id" class="col-form-label font-weight-bold">Section:</label>
                                 <select required id="section_id" name="section_id" data-placeholder="Select Class First" class="form-control select">
                                     @if($selected)
@@ -48,15 +48,12 @@
                             </div>
                         </div>
 
-
-                        <div class="col-md-2 mt-4">
-                            <div class="text-right mt-1">
-                                <button type="submit" class="btn btn-primary">View Sheet <i class="icon-paperplane ml-2"></i></button>
-                            </div>
-                        </div>
-
                     </div>
-
+                    <div class="">
+                        <div class="">
+                            <button type="submit" class="btn btn-primary">View Sheet <i class="icon-paperplane ml-2"></i></button>
+                        </div>
+                    </div>
                 </form>
         </div>
     </div>

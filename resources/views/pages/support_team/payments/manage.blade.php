@@ -1,6 +1,7 @@
 @extends('layouts.master')
 @section('page_title', 'Student Payments')
 @section('content')
+<div class="flex flex-col gap-3">
     <div class="card shadow-none">
         <div class="card-header header-elements-inline py-3 bg-body-tertiary text-dark">
             <h5 class="card-title"><i class="icon-cash2 mr-2"></i> Student Payments</h5>
@@ -52,54 +53,77 @@
                     <th>Payments</th>
                 </tr>
                 </thead>
-                <tbody>
-                @foreach($students as $s)
-                    <tr>
-                        <td>{{ $loop->iteration }}</td>
-                        <td><img class="rounded-circle" style="height: 40px; width: 40px;" src="{{ $s->user->photo }}" alt="photo"></td>
-                        <td>{{ $s->user->name }}</td>
-                        <td>{{ $s->adm_no }}</td>
-                        <td>
-                            <div class="dropdown">
-                                <a href="#" class=" btn btn-danger" data-toggle="dropdown"> Manage Payments <i class="icon-arrow-down5"></i>
-                                </a>
-                        <div class="dropdown-menu dropdown-menu-left">
-                            <a href="{{ route('payments.invoice', [Qs::hash($s->user_id)]) }}" class="dropdown-item">All Payments</a>
-                            @foreach(Pay::getYears($s->user_id) as $py)
-                            @if($py)
-                                <a href="{{ route('payments.invoice', [Qs::hash($s->user_id), $py]) }}" class="dropdown-item">{{ $py }}</a>
-                            @endif
-                            @endforeach
-                        </div>
-                            </div>
-                        </td>
+                <tbody class="data-container-0">
 
-                    </tr>
-                @endforeach
                 </tbody>
             </table>
         </div>
     </div>
-
     @endif
-    <script>
-        $(document).ready(function () {
-            // Function to filter table rows based on input value
-            function filterTable() {
-                var filterValue = $('#table-filter').val().toLowerCase(); // Get the filter value
-                $('table tbody tr').each(function () {
-                    // Check each row's content
-                    var rowText = $(this).text().toLowerCase();
-                    if (rowText.includes(filterValue)) {
-                        $(this).show(); // Show the row if it matches the filter
-                    } else {
-                        $(this).hide(); // Hide the row if it doesn't match
-                    }
-                });
-            }
+</div>
 
-            // Attach an event listener to the input field for filtering
-            $('#table-filter').on('input', filterTable);
+    <script>
+@if($selected)
+$(document).ready()
+{
+    const studentRecords = {!! $students->toJson() !!};
+    function searchData(class_id){
+        const searchInput = $('#dataSearch'+class_id)
+        const searchTerm = $('#dataSearch'+class_id).val().toLowerCase();
+        // Filter records based on the search
+        const filteredRecords = studentRecords
+        .filter((data)=>{
+            return class_id==0?data:data.my_class_id == class_id
+        })
+        .filter(function (data) {
+            return data.title.toLowerCase().includes(searchTerm); // Replace "someProperty" with the property you want to search
         });
+
+        // Update the displayed records
+        display(filteredRecords,class_id);
+    }
+    function display(records,id){
+
+        $('#data-container-'+id).empty(); // Clear previous results
+        // filter records based on id
+        records
+        .filter((item)=>{
+            return id==0?item:item.my_class_id == id
+        })
+        .forEach(function(data,index){
+            $('#data-container-'+id).append(`
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td><img class="rounded-circle" style="height: 40px; width: 40px;" src="${data.user.photo}" alt="photo"></td>
+                        <td>${data.user.name}</td>
+                        <td>${data.adm_no}</td>
+                        <td>
+                            <div class="dropdown">
+                                <a href="#" class=" btn btn-danger" data-toggle="dropdown"> Manage Payments <i class="icon-arrow-down5"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-left">
+                                    <a href="{{ route('payments.invoice', [Qs::hash($s->user_id)]) }}" class="dropdown-item">All Payments</a>
+                                    @foreach(Pay::getYears($s->user_id) as $py)
+                                    @if($py)
+                                        <a href="{{ route('payments.invoice', [Qs::hash($s->user_id), $py]) }}" class="dropdown-item">{{ $py }}</a>
+                                    @endif
+                                    @endforeach
+                                </div>
+                            </div>
+                        </td>
+
+                    </tr>
+            `);
+        });
+    };
+    function getData(id=null){
+        if(id==null){
+            id=0;
+        }
+        display(studentRecords,id)
+    }
+    // Call the display function to initially display the records
+};
+@endif
     </script>
 @endsection
