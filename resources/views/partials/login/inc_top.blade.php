@@ -7,6 +7,8 @@
 <link href=" {{ asset('assets/css/layout.min.css') }}" rel="stylesheet" type="text/css">
 <link href=" {{ asset('assets/css/components.css') }}" rel="stylesheet" type="text/css">
 <link href=" {{ asset('assets/css/colors.min.css') }}" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="{{ mix('css/app.css') }}">
+
 <!-- /global stylesheets -->
 
 <!-- Core JS files -->

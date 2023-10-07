@@ -1,6 +1,7 @@
 @extends('layouts.master')
 @section('page_title', 'Grade Levels')
 @section('content')
+
 <style>
     .edit_input{
         border: 0;
@@ -52,7 +53,7 @@
                                     <td>
                                     <select name="next_grade_id" class="form-control border-0" id="next_grade_id" onchange="updateRecord(this,'{{$gl->id}}')">
                                         <option  value="0">-</option>
-                                        @foreach (Qs::getAllGradeLevels() as $glo )
+                                        @foreach (Qs::getSchoolGradeLevels() as $glo )
                                         <option  {{ $gl->next_grade_id == $glo->id?'selected':'' }} value="{{$glo->id}}">{{$glo->title}}</option>
                                         @endforeach
                                     </select>
@@ -106,6 +107,7 @@
 
     <script>
             function updateRecord(element,id){
+                $('#ajax-loader').show();
                 var title = ($(element).attr('name'))
                 var value = ($(element).val())
                 var data = {
@@ -122,6 +124,7 @@
                     },
                     success: () => {
                         flash({msg : 'grade updated Successfully', type : 'success'});
+                        $('#ajax-loader').hide();
                     }
                 });
             }

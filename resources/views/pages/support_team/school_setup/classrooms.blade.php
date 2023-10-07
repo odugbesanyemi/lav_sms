@@ -28,8 +28,8 @@
             <div class="tab-pane fade show active" id="all-classrooms">
                 <form action="/setup/classrooms/add" method="post" >
                     @csrf @method('post')
-                    <div class="" style="overflow-x: auto;" >
-                        <table class="table">
+                    <div class="overflow-x-auto" >
+                        <table class="table w-full">
                             <thead>
                             <tr>
                                 <th>S/N</th>

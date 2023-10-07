@@ -22,6 +22,7 @@
     }
 
     function getClassSections(class_id, destination){
+        $('#ajax-loader').show();
         var url = "{{ route('get_class_sections', [':id']) }}";
         url = url.replace(':id', class_id);
         var section = destination ? $(destination) : $('#section_id');
@@ -38,12 +39,13 @@
                         text: data.name
                     }));
                 });
-
+                $('#ajax-loader').hide();
             }
         })
     }
 
     function getClassSubjects(class_id){
+        $('#ajax-loader').show();
         var url = "{{ route('get_class_subjects', [':id']) }}";
         url = url.replace(':id', class_id);
         var section = $('#section_id');
@@ -68,7 +70,7 @@
                         text: data.name
                     }));
                 });
-
+                $('#ajax-loader').hide();
             }
         })
     }

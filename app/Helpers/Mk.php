@@ -130,8 +130,8 @@ class Mk extends Qs
         $grades = Grade::where(['school_id' => $school_id])->orderBy('name')->get();
 
         if($grades->count() < 1){
-            $anySchoolId = Grade::first();
-            $grades = Grade::where('school_id',$anySchoolId[0]->school_id)->orderBy('name')->get();
+            $anySchoolId = Grade::pluck('school_id')->first();
+            $grades = Grade::where('school_id',$anySchoolId)->orderBy('name')->get();
         }
         return $grades;
     }

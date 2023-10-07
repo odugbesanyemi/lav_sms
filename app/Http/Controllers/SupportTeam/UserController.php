@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers\SupportTeam;
-
 use App\Helpers\Qs;
 use App\Http\Requests\UserRequest;
 use App\Repositories\LocationRepo;
@@ -12,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-
+use Request;
 
 class UserController extends Controller
 {
@@ -43,7 +42,6 @@ class UserController extends Controller
 
     public function edit($id)
     {
-        $id = Qs::decodeHash($id);
         $d['user'] = $this->user->find($id);
         $d['states'] = $this->loc->getStates();
         $d['users'] = $this->user->getPTAUsers();
@@ -52,15 +50,16 @@ class UserController extends Controller
         return view('pages.support_team.users.edit', $d);
     }
 
-    public function reset_pass($id)
+    public function reset_pass(Request $req,$user_id)
     {
+        dd($user_id);
         // Redirect if Making Changes to Head of Super Admins
-        if(Qs::headSA($id)){
+        if(Qs::headSA($user_id)){
             return back()->with('flash_danger', __('msg.denied'));
         }
 
         $data['password'] = Hash::make('user');
-        $this->user->update($id, $data);
+        $this->user->update($user_id, $data);
         return back()->with('flash_success', __('msg.pu_reset'));
     }
 
@@ -111,7 +110,6 @@ class UserController extends Controller
 
     public function update(UserRequest $req, $id)
     {
-        $id = Qs::decodeHash($id);
 
         // Redirect if Making Changes to Head of Super Admins
         if(Qs::headSA($id)){
@@ -157,7 +155,6 @@ class UserController extends Controller
 
     public function show($user_id)
     {
-        $user_id = Qs::decodeHash($user_id);
         if(!$user_id){return back();}
 
         $data['user'] = $this->user->find($user_id);
@@ -172,8 +169,6 @@ class UserController extends Controller
 
     public function destroy($id)
     {
-        $id = Qs::decodeHash($id);
-
         // Redirect if Making Changes to Head of Super Admins
         if(Qs::headSA($id)){
             return back()->with('pop_error', __('msg.denied'));

@@ -38,13 +38,7 @@
                 @foreach($subjects as $sub)
                     <th rowspan="2">{{ strtoupper($sub->slug ?: $sub->name) }}</th>
                 @endforeach
-             {{--   @if($ex->term == 3)
-                    <th>1ST TERM TOTAL</th>
-                    <th>2ND TERM TOTAL</th>
-                    <th>3RD TERM TOTAL</th>
-                    <th style="color: darkred">CUM Total</th>
-                    <th style="color: darkblue">CUM Average</th>
-                @endif--}}
+
                 <th style="color: darkred">Total</th>
                 <th style="color: darkblue">Average</th>
                 <th style="color: darkgreen">Position</th>
@@ -52,25 +46,54 @@
             </thead>
             <tbody>
             @foreach($students as $s)
+                @php
+                    $cumTotal = 0;
+                    $totalSubjects = 0;
+                    $allStudents = [];
+                @endphp            
                 <tr>
                     <td>{{ $loop->iteration }}</td>
                     <td style="text-align: center">{{ $s->user->name }}</td>
                     @foreach($subjects as $sub)
-                        <td>{{ $marks->where('student_id', $s->user_id)->where('subject_id', $sub->id)->first()->$tex ?? '-' ?: '-' }}</td>
+                        @php
+                            $ca_score = $marks->where('student_id', $s->user_id)->where('subject_id', $sub->id)->first()->ca_score;
+                            $exam_score = $marks->where('student_id', $s->user_id)->where('subject_id', $sub->id)->first()->exam_score;
+                            $total = $ca_score + $exam_score;
+                            $cumTotal += $total;
+                            $total == 0 ? $totalSubjects + 0 : $totalSubjects++;
+                        @endphp
+                        <td>{{ $total }}</td>
                     @endforeach
+                    <td style="color: darkred">{{ $cumTotal ?: '-' }}</td>
+                    <td style="color: darkblue">{{ ($cumTotal/$totalSubjects) ?: '-' }}</td>
+                    <td style="color: darkgreen">
+                        
+                        @php
+                            // Sort students by cumulative total scores in descending order
+                            $sortedStudents = $students->sortByDesc(function ($student) use ($marks, $subjects) {
+                                $cumTotal = 0;
+                                $totalSubjects = 0;
+                                foreach ($subjects as $sub) {
+                                    $ca_score = $marks->where('student_id', $student->user_id)->where('subject_id', $sub->id)->first()->ca_score;
+                                    $exam_score = $marks->where('student_id', $student->user_id)->where('subject_id', $sub->id)->first()->exam_score;
+                                    $total = $ca_score + $exam_score;
+                                    $cumTotal += $total;
+                                    $total == 0 ? $totalSubjects + 0 : $totalSubjects++;
+                                }
+                                return $cumTotal;
+                            });
+            
+                            // Get the position of the current student
+                            $position = $sortedStudents->search(function ($item, $key) use ($s) {
+                                return $item->id == $s->id;
+                            });
+            
+                            // Add 1 to the position to start from 1 instead of 0
+                            $position += 1;
+                            echo $position;
+                        @endphp                        
 
-                    {{--@if($ex->term == 3)
-                        --}}{{--1st term Total--}}{{--
-                        <td>{{ Mk::getTermTotal($s->user_id, 1, $year) ?: '-' }}</td>
-                        --}}{{--2nd Term Total--}}{{--
-                        <td>{{ Mk::getTermTotal($s->user_id, 2, $year) ?: '-' }}</td>
-                        --}}{{--3rd Term total--}}{{--
-                        <td>{{ Mk::getTermTotal($s->user_id, 3, $year) ?: '-' }}</td>
-                    @endif--}}
-
-                    <td style="color: darkred">{{ $exr->where('student_id', $s->user_id)->first()->total ?: '-' }}</td>
-                    <td style="color: darkblue">{{ $exr->where('student_id', $s->user_id)->first()->ave ?: '-' }}</td>
-                    <td style="color: darkgreen">{!! Mk::getSuffix($exr->where('student_id', $s->user_id)->first()->pos) ?: '-' !!}</td>
+                    </td>
                 </tr>
             @endforeach
             </tbody>

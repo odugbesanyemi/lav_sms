@@ -13977,12 +13977,7 @@ textarea#HandsontableCopyPaste {
  *  Styles related to user login - logins, registration, password revovery, unlock etc.
  *
  * ---------------------------------------------------------------------------- */
-.login-cover {
 
-    /* global 92%+ browsers support */
-    background: radial-gradient(circle at 50% 50%, rgba(33, 150, 243, 1) 1%, rgba(16, 38, 65, 1) 100%);
-    background-size: cover;
-}
 
 .login-form {
   width: 100%; }

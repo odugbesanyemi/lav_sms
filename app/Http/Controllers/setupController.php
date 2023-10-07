@@ -237,8 +237,7 @@ class setupController extends Controller
         return back()->with('flash_success',__('msg.del_ok'));
     }
 
-    public function status($error_module_name){
-        $data['name']=$error_module_name;
-        return view('pages.support_team.status',$data);
+    public function status(Request $req){
+        return view('pages.support_team.status',['errorObject'=>$req['errorObject']]);
     }
 }

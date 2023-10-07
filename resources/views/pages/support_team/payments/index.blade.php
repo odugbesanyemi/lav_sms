@@ -201,6 +201,7 @@ $(document).ready()
         }
         display(paymentRecords,id)
     }
+    getData();
     // Call the display function to initially display the records
 };
 @endif

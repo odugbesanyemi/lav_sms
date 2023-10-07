@@ -446,7 +446,7 @@ class Qs
                 $data = AcademicCalendar::where('school_id',$active_School_id)
                     ->get()
                     ->last();
-                return [$data];
+                    return [$data];
             }else{
                 $calendarId = Session::get('selected_calendar');
                 $data = AcademicCalendar::where('id',$calendarId)->get();
@@ -511,7 +511,7 @@ class Qs
     }
 
     public static function getAllClassPeriods(){
-        return ClassPeriods::all();
+        return ClassPeriods::where('school_id',self::findActiveSchool()[0]->id)->get();
     }
 
     public static function getClassPeriodById($id){
@@ -523,7 +523,7 @@ class Qs
     }
 
     public static function getAllClassrooms(){
-        return Classrooms::all();
+        return Classrooms::where('school_id',self::findActiveSchool()[0]->id)->get();
     }
     public static function getSchoolGradeLevels(){
         return GradeLevels::where('school_id',Qs::findActiveSchool()[0]->id)

@@ -44,8 +44,7 @@ class SettingController extends Controller
             $f['name'] = time().'-'. 'logo.' . $f['ext'];
             $f['path'] = $logo->storeAs(Qs::getPublicUploadPath(), $f['name']);
             $logo_path = asset('storage/' . $f['path']);
-            dd($f['path']);
-            // $this->setting->update('logo', $logo_path);
+            $this->setting->update('logo', $logo_path);
         }
 
         return back()->with('flash_success', __('msg.update_ok'));

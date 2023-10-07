@@ -216,7 +216,6 @@ class StudentRecordController extends Controller
 
     public function show($sr_id)
     {
-        $sr_id = Qs::decodeHash($sr_id);
         if(!$sr_id){return Qs::goWithDanger();}
 
         $data['sr'] = $this->student->getRecord(['id' => $sr_id])->first();
@@ -231,7 +230,6 @@ class StudentRecordController extends Controller
 
     public function edit($sr_id)
     {
-        $sr_id = Qs::decodeHash($sr_id);
         if(!$sr_id){return Qs::goWithDanger();}
 
         $data['sr'] = $this->student->getRecord(['id' => $sr_id])->first();
@@ -245,7 +243,6 @@ class StudentRecordController extends Controller
 
     public function update(StudentRecordUpdate $req, $sr_id)
     {
-        $sr_id = Qs::decodeHash($sr_id);
         if(!$sr_id){return Qs::goWithDanger();}
 
         $sr = $this->student->getRecord(['id' => $sr_id])->first();

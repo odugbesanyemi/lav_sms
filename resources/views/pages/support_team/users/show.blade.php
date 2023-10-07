@@ -1,8 +1,8 @@
 @extends('layouts.master')
 @section('page_title', 'User Profile - '.$user->name)
 @section('content')
-    <div class="row">
-        <div class="col-md-3 text-center">
+    <div class="grid md:grid-cols-3 gap-3">
+        <div class=" text-center">
             <div class="card shadow-none">
                 <div class="card-body">
                     <img style="width: 90%; height:90%" src="{{ $user->photo }}" alt="photo" class="rounded-circle">
@@ -11,7 +11,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-9">
+        <div class="md:col-span-2">
             <div class="card shadow-none">
                 <div class="card-body">
                     <ul class="nav nav-tabs nav-tabs-highlight">

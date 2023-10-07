@@ -41,22 +41,35 @@
     </div>
     @if($selected)
     <div class="card">
-        <div class="card-body overflow-x-auto">
-            <input id="table-filter" type="text" placeholder="Filter">
-            <table class="table table-auto">
-                <thead>
-                <tr>
-                    <th>S/N</th>
-                    <th>Photo</th>
-                    <th>Name</th>
-                    <th>ADM_No</th>
-                    <th>Payments</th>
-                </tr>
-                </thead>
-                <tbody class="data-container-0">
+        <div class="card-body">
+            <div class="search py-3">
+                <form class="flex items-center">
+                    <label for="simple-search" class="sr-only">Search</label>
+                    <div class="relative w-full">
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-2 pointer-events-none">
+                            <i class="fi fi-rr-search text-xl text-slate-300 flex"></i>
+                        </div>
+                        <input oninput="searchData(0)" type="text" id="dataSearch0" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Quick Search..." required>
+                    </div>
+                </form>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full table">
+                    <thead>
+                    <tr>
+                        <th>S/N</th>
+                        <th>Photo</th>
+                        <th>Name</th>
+                        <th>ADM_No</th>
+                        <th>Payments</th>
+                    </tr>
+                    </thead>
+                    <tbody id="data-container-0">
 
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
+
         </div>
     </div>
     @endif
@@ -66,7 +79,8 @@
 @if($selected)
 $(document).ready()
 {
-    const studentRecords = {!! $students->toJson() !!};
+    var studentRecords = {!! $students->toJson() !!};
+    studentRecords = Object.values(studentRecords)
     function searchData(class_id){
         const searchInput = $('#dataSearch'+class_id)
         const searchTerm = $('#dataSearch'+class_id).val().toLowerCase();
@@ -76,7 +90,7 @@ $(document).ready()
             return class_id==0?data:data.my_class_id == class_id
         })
         .filter(function (data) {
-            return data.title.toLowerCase().includes(searchTerm); // Replace "someProperty" with the property you want to search
+            return data.user.name.toLowerCase().includes(searchTerm); // Replace "someProperty" with the property you want to search
         });
 
         // Update the displayed records
@@ -102,16 +116,18 @@ $(document).ready()
                                 <a href="#" class=" btn btn-danger" data-toggle="dropdown"> Manage Payments <i class="icon-arrow-down5"></i>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-left">
-                                    <a href="{{ route('payments.invoice', [Qs::hash($s->user_id)]) }}" class="dropdown-item">All Payments</a>
-                                    @foreach(Pay::getYears($s->user_id) as $py)
+                                    <a href="/payments/invoice/${data.user_id}" class="dropdown-item">All Payments</a>
+                                    @foreach(Pay::getYears('${data.user_id}') as $py)
+                                    @php
+                                        echo $py
+                                    @endphp
                                     @if($py)
-                                        <a href="{{ route('payments.invoice', [Qs::hash($s->user_id), $py]) }}" class="dropdown-item">{{ $py }}</a>
+                                        <a href="{{ route('payments.invoice', [Qs::hash('${data.user_id}'), $py]) }}" class="dropdown-item">{{ $py }}</a>
                                     @endif
                                     @endforeach
                                 </div>
                             </div>
                         </td>
-
                     </tr>
             `);
         });
@@ -122,6 +138,7 @@ $(document).ready()
         }
         display(studentRecords,id)
     }
+    getData();
     // Call the display function to initially display the records
 };
 @endif

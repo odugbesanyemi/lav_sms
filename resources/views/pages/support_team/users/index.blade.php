@@ -11,13 +11,13 @@
                     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Manage Users</a>
                     <div class="dropdown-menu dropdown-menu-right">
                         @foreach($user_types as $ut)
-                            <a href="#ut-{{ Qs::hash($ut->id) }}" class="dropdown-item" data-toggle="tab">{{ $ut->name }}s</a>
+                            <a href="#ut-{{ Qs::hash($ut->id) }}" onclick="getData('{{ $ut->title }}')" class="dropdown-item" data-toggle="tab">{{ $ut->name }}s</a>
                         @endforeach
                     </div>
                 </li>
             </ul>
 
-            <div class="tab-content p-md-4 border-l border-r border-b bg-white shadow">
+            <div class="tab-content p-2 border-l border-r border-b bg-white">
                 <div class="tab-pane fade show active" id="new-user">
                     <form method="post" enctype="multipart/form-data" class="wizard-form steps-validation ajax-store" action="{{ route('users.store') }}" data-fouc>
                         @csrf
@@ -174,55 +174,36 @@
 
                 @foreach($user_types as $ut)
                     <div class="tab-pane fade" id="ut-{{Qs::hash($ut->id)}}">
-                        <table class="table datatable-button-html5-columns">
-                            <thead>
-                            <tr>
-                                <th>S/N</th>
-                                <th>Photo</th>
-                                <th>Name</th>
-                                <th>Username</th>
-                                <th>Phone</th>
-                                <th>Email</th>
-                                <th>Action</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            @foreach($users->where('user_type', $ut->title) as $u)
+                        <div class="search py-3">
+                            <form class="flex items-center">
+                                <label for="simple-search" class="sr-only">Search</label>
+                                <div class="relative w-full">
+                                    <div class="absolute inset-y-0 left-0 flex items-center pl-2 pointer-events-none">
+                                        <i class="fi fi-rr-search text-xl text-slate-300 flex"></i>
+                                    </div>
+                                    <input oninput="searchData('{{ $ut->title }}')" type="text" id="dataSearch{{ $ut->title }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Quick Search..." required>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="table w-full">
+                                <thead>
                                 <tr>
-                                    <td>{{ $loop->iteration }}</td>
-                                    <td><img class="rounded-circle" style="height: 40px; width: 40px;" src="{{ $u->photo }}" alt="photo"></td>
-                                    <td>{{ $u->name }}</td>
-                                    <td>{{ $u->username }}</td>
-                                    <td>{{ $u->phone }}</td>
-                                    <td>{{ $u->email }}</td>
-                                    <td class="text-center">
-                                        <div class="list-icons">
-                                            <div class="dropdown">
-                                                <a href="#" class="list-icons-item" data-toggle="dropdown">
-                                                    <i class="icon-menu9"></i>
-                                                </a>
-
-                                                <div class="dropdown-menu dropdown-menu-left">
-                                                    {{--View Profile--}}
-                                                    <a href="{{ route('users.show', Qs::hash($u->id)) }}" class="dropdown-item"><i class="icon-eye"></i> View Profile</a>
-                                                    {{--Edit--}}
-                                                    <a href="{{ route('users.edit', Qs::hash($u->id)) }}" class="dropdown-item"><i class="icon-pencil"></i> Edit</a>
-                                                @if(Qs::userIsSuperAdmin())
-
-                                                        <a href="{{ route('users.reset_pass', Qs::hash($u->id)) }}" class="dropdown-item"><i class="icon-lock"></i> Reset password</a>
-                                                        {{--Delete--}}
-                                                        <a id="{{ Qs::hash($u->id) }}" onclick="confirmDelete(this.id)" href="#" class="dropdown-item"><i class="icon-trash"></i> Delete</a>
-                                                        <form method="post" id="item-delete-{{ Qs::hash($u->id) }}" action="{{ route('users.destroy', Qs::hash($u->id)) }}" class="hidden">@csrf @method('delete')</form>
-                                                @endif
-
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
+                                    <th>S/N</th>
+                                    <th>Photo</th>
+                                    <th>Name</th>
+                                    <th>Username</th>
+                                    <th>Phone</th>
+                                    <th>Email</th>
+                                    <th>Action</th>
                                 </tr>
-                            @endforeach
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody id="data-container-{{ $ut->title }}">
+
+                                </tbody>
+                            </table>
+                        </div>
+
                     </div>
                 @endforeach
 
@@ -231,5 +212,77 @@
     </div>
 
     {{--Student List Ends--}}
+    <script>
+        $(document).ready()
+        {
+            var records = {!! $users->toJson() !!};
+            records = Object.values(records)
+            function searchData(class_id){
+                const searchInput = $('#dataSearch'+class_id)
+                const searchTerm = $('#dataSearch'+class_id).val().toLowerCase();
+                // Filter records based on the search
+                const filteredRecords = records
+                .filter((data)=>{
+                    return class_id==0?data:data.user_type == class_id
+                })
+                .filter(function (data) {
+                    return data.name.toLowerCase().includes(searchTerm) || (data.phone?data.phone.toLowerCase().includes(searchTerm):false) ; // Replace "someProperty" with the property you want to search
+                });
 
+                // Update the displayed records
+                display(filteredRecords,class_id);
+            }
+            function display(records,id){
+
+                $('#data-container-'+id).empty(); // Clear previous results
+                // filter records based on id
+                records
+                .filter((item)=>{
+                    return id==0?item:item.user_type == id
+                })
+                .forEach(function(data,index){
+                    $('#data-container-'+id).append(`
+                        <tr>
+                            <td>${index+1}</td>
+                            <td><img class="rounded-circle" style="height: 40px; width: 40px;" src="${data.photo}" alt="photo"></td>
+                            <td>${data.name}</td>
+                            <td>${data.username}</td>
+                            <td>${data.phone}</td>
+                            <td>${data.email}</td>
+                            <td class="text-center">
+                                <div class="list-icons">
+                                    <div class="dropdown">
+                                        <a href="#" class="list-icons-item" data-toggle="dropdown">
+                                            <i class="icon-menu9"></i>
+                                        </a>
+
+                                        <div class="dropdown-menu dropdown-menu-left">
+                                            {{--View Profile--}}
+                                            <a href="/users/${data.id}" class="dropdown-item"><i class="icon-eye"></i> View Profile</a>
+                                            {{--Edit--}}
+                                            <a href="/users/${data.id}/edit" class="dropdown-item"><i class="icon-pencil"></i> Edit</a>
+                                        @if(Qs::userIsSuperAdmin())
+                                                <a href="{{ route('users.reset_pass','') }}/${data.id}" class="dropdown-item"><i class="icon-lock"></i> Reset password</a>
+                                                {{--Delete--}}
+                                                <a id="${data.id}" onclick="confirmDelete(this.id)" href="#" class="dropdown-item"><i class="icon-trash"></i> Delete</a>
+                                                <form method="post" id="item-delete-${data.id}" action="{{ route('users.destroy','') }}/${data.id}" class="hidden">@csrf @method('delete')</form>
+                                        @endif
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    `);
+                });
+            };
+            function getData(id=null){
+                if(id==null){
+                    id=0;
+                }
+                display(records,id)
+            }
+            getData();
+        }
+        </script>
 @endsection

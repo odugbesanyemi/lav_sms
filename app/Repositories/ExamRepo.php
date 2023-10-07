@@ -14,7 +14,7 @@ class ExamRepo
 
     public function all()
     {
-        return Exam::where(['school_id'=>Qs::findActiveSchool()[0]->id,'acad_year_id'=>Qs::getActiveAcademicYear()[0]->id])->orderBy('name', 'asc')->get();
+        return Exam::where(['school_id'=>Qs::findActiveSchool()[0]->id,'acad_year_id'=>Qs::getActiveAcademicYear()[0]->id])->orderBy('name', 'asc')->with('marking_period','acad_year')->get();
     }
 
     public function getExam($data)
@@ -118,7 +118,7 @@ class ExamRepo
 
     public function getMark($data)
     {
-        return Mark::where($data)->with('grade')->get();
+        return Mark::where($data)->with('grade','user.student_record')->get();
     }
 
     /*********** Skills ***************/

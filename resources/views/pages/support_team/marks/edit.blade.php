@@ -1,31 +1,33 @@
 <form class="ajax-update" action="{{ route('marks.update', [$exam_id, $my_class_id, $section_id, $subject_id]) }}" method="post">
     @csrf @method('put')
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th>S/N</th>
-            <th>Name</th>
-            <th>ADM_NO</th>
-            <th>CA ({{ $mp->ca_final_score?$mp->ca_final_score:40 }})</th>
-            <th>EXAM ({{ $mp->exam_final_score?$mp->exam_final_score:60 }})</th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach($marks->sortBy('user.name') as $mk)
-            <tr>
-                <td>{{ $loop->iteration }}</td>
-                <td>{{ $mk->user->name }} </td>
-                <td>{{ $mk->user->student_record->adm_no }}</td>
+    <div class="search py-3 max-md:px-2">
+        <label for="simple-search" class="sr-only">Search</label>
+        <div class="relative w-full">
+            <div class="absolute inset-y-0 left-0 flex items-center pl-2 pointer-events-none">
+                <i class="fi fi-rr-search text-xl text-slate-300 flex"></i>
+            </div>
+            <input oninput="searchData(0)" type="text" id="dataSearch0" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Quick Search...">
+        </div>
+    </div>    
+    <div class="overflow-x-auto">
+        <table class="table table-striped table-auto w-full">
+            <thead>
+                <tr>
+                    <th>S/N</th>
+                    <th>Name</th>
+                    <th>ADM_NO</th>
+                    <th>CA ({{ $mp->ca_final_score?$mp->ca_final_score:40 }})</th>
+                    <th>EXAM ({{ $mp->exam_final_score?$mp->exam_final_score:60 }})</th>
+                </tr>
+            </thead>
+            <tbody id="data-container-0">
 
-                {{-- CA AND EXAMS --}}
-                <td><input {{Mk::isMarkingPeriod($mp->marking_period_id)?'':'disabled'}} title="1ST CA" min="1" max="{{ $mp->ca_final_score?$mp->ca_final_score:40 }}" class="text-center form-input" name="ca_score_{{$mk->id}}" value="{{ $mk->ca_score }}" type="number"></td>
-                <td><input {{Mk::isMarkingPeriod($mp->marking_period_id)?'':'disabled'}} title="EXAM" min="1" max="{{ $mp->exam_final_score?$mp->exam_final_score:60 }}" class="text-center form-input" name="exam_score_{{$mk->id}}" value="{{ $mk->exam_score }}" type="number"></td>
-            </tr>
-        @endforeach
-        </tbody>
-    </table>
+            </tbody>
+        </table>        
+    </div>
 
-    <div class=" mt-2">
-        <button type="submit" class="btn btn-primary">Update Marks <i class="icon-paperplane ml-2"></i></button>
+
+    <div class="mt-2">
+        <button type="submit" class="text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2  focus:outline-none flex items-center">Update Marks <i class="icon-paperplane ml-2 flex"></i></button>
     </div>
 </form>

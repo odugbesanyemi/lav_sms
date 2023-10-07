@@ -19,7 +19,7 @@
 </style>
     @if(Qs::userIsTeamSA())
        <div class="grid lg:grid-cols-4 md:grid-cols-2 max-md:grid-cols-1 gap-3 mb-4 g-3 text-white">
-            <div class="card-body border-0 bg-blue-400 has-bg-image rounded-lg h-100 d-flex align-items-center justify-content-center">
+            <div class="bg-white border text-purple-900 border-purple-800/10 card-body  has-bg-image rounded-lg h-100 d-flex align-items-center justify-content-center">
                 <div class="w-100 d-flex justify-content-between">
                     <div class="media-body">
                         <h3 class="mb-0">{{ $users->where('user_type', 'student')->count() }}</h3>
@@ -31,7 +31,7 @@
                     </div>
                 </div>
             </div>
-            <div class="card-body rounded-lg bg-red-400 has-bg-image border-0 h-100  d-flex align-items-center justify-content-center">
+            <div class="bg-white border text-purple-900 border-purple-800/10 card-body rounded-lg has-bg-image h-100  d-flex align-items-center justify-content-center">
                 <div class="d-flex justify-content-between w-100">
                     <div class="media-body">
                         <h3 class="mb-0">{{ $users->where('user_type', 'teacher')->count() }}</h3>
@@ -44,7 +44,7 @@
                 </div>
             </div>
 
-            <div class="rounded-lg card-body bg-green-400 has-bg-image border-0 h-100  d-flex align-items-center justify-content-center">
+            <div class="bg-white border text-purple-900 border-purple-800/10 rounded-lg card-body has-bg-image h-100  d-flex align-items-center justify-content-center">
                 <div class="w-100 d-flex justify-content-between">
                     <div class="mr-3 align-self-center">
                         <i class="icon-pointer icon-3x opacity-75"></i>
@@ -57,7 +57,7 @@
                 </div>
             </div>
 
-            <div class="rounded-lg card-body bg-indigo-400 has-bg-image border-0 h-100 d-flex align-items-center justify-content-center">
+            <div class="bg-white border text-purple-900 border-purple-800/10 rounded-lg card-body has-bg-image h-100 d-flex align-items-center justify-content-center">
                 <div class="w-100 d-flex justify-content-between">
                     <div class="mr-3 align-self-center">
                         <i class="icon-user icon-3x opacity-75"></i>
@@ -76,7 +76,7 @@
     {{--Events Calendar Begins--}}
     <div class="card border-1 border shadow-none">
         <div class="card-header p-3 header-elements-inline bg-body-tertiary text-black">
-            <h5 class="card-title">School Events Calendar</h5>
+            <h5 class="card-title flex items-center text-purple-900"><i class="fi fi-rr-calendar-day text-xl mr-3 flex text-purple-900/20"></i>School Events Calendar</h5>
          {!! Qs::getPanelOptions() !!}
         </div>
 

@@ -27,38 +27,35 @@
         transform: scale(110%);
         transform-origin: center;
     }
-    .sidebar-content a:hover::before{
-        position: absolute;
-        top: 30px;
-        left: 20px;
-        height: 100%;
-        width: 10px;
-        background-color: #2c3e50;
-
-    }
-    iconify-icon{
+    .sidebar-content iconify-icon{
         text-decoration: none;
-        color: #2c3e50 !important;
+        color: #460f79 !important;
         font-size: 25px !important;
         margin-right: 15px;
         transition: all .5s ease;
     }
     .sidebar-content .active{
-        background: linear-gradient(to right,#2c3e5030,#2c3e5000) ;
-        color: black !important;
+        border-left: 4px solid #531092;
+        color: #531092 !important;
     }
     .sidebar-content .active iconify-icon{
-        color: #2c3e50!important;
+        color: #531092 !important;
         transform: scale(110%);
         transform-origin: center;
     }
     .sidebar-content .nav-item-expanded{
         background-color: white;
-        box-shadow: 0 -5px 10px #2c3e5010 inset;
-
+        border-right: 3px solid #7317ca9a;
+        overflow: hidden;
+        box-shadow: 0 5px 10px rgb(108 43 217 10);
+        padding: 5px 0;
     }
     .sidebar-content .nav-item ul{
         /* box-shadow: 0 -5px 10px #2c3e5010 inset; */
+    }
+    a.nav-link{
+        padding: 15px !important;
+        margin-bottom:5px; 
     }
 </style>
 <div class="" id="sidebar-collapsible">
@@ -283,11 +280,12 @@
                         @endif
                         @if(Qs::userIsTeamSA())
                             <li class="nav-item nav-item-submenu">
-                                <a href="{{ route('payments.manage') }}" class="nav-link {{ in_array(Route::currentRouteName(), ['setup.schools','setup.schools.create','setup.schools.preferences']) ? 'active' : '' }}">Setup</a>
+                                <a href="#" class="nav-link {{ in_array(Route::currentRouteName(), ['setup.schools','setup.schools.create','setup.schools.preferences','marks.setup.manage-skills-type','marks.setup.manage-remarks']) ? 'active' : '' }}">Setup</a>
                                 <ul class="nav-group-sub">
+                                    <li class="nav-item"><a href="/marks/setup/manage-skills-type" class="nav-link {{ in_array(Route::currentRouteName(), ['marks.setup.manage-skills-type']) ? 'active' : '' }}">Manage Skill Types</a></li>
                                     <li class="nav-item"><a href="/marks/setup/manage-skills" class="nav-link {{ in_array(Route::currentRouteName(), ['marks.setup.manage-skills']) ? 'active' : '' }}">Manage Skills</a></li>
+                                    <li class="nav-item"><a href="/marks/setup/remarks" class="nav-link {{ in_array(Route::currentRouteName(), ['marks.setup.manage-remarks']) ? 'active' : '' }}">Manage Remarks</a></li>
                                     <li class="nav-item"><a href="/marks/setup/preferences" class="nav-link {{ in_array(Route::currentRouteName(), ['marks.setup.preferences']) ? 'active' : '' }}">Exam System Preferences</a></li>
-
                                 </ul>
                             </li>
                         @endif

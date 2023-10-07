@@ -32,7 +32,7 @@
                                         <select required onchange="getClassSections(this.value)" id="my_class_id" name="my_class_id" class="form-control select">
                                             <option value="">Select Class</option>
                                             @foreach($my_classes as $c)
-                                                <option {{ ($selected && $my_class_id == $c->id) ? 'selected' : '' }} value="{{ $c->id }}">{{ $c->name }}</option>
+                                                <option {{ ($selected && $my_class_id == $c->id) ? 'selected' : '' }} value="{{ $c->id }}">{{ $c->title }}</option>
                                             @endforeach
                                         </select>
                                     </div>

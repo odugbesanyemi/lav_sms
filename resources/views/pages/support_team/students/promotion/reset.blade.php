@@ -15,9 +15,9 @@
             {!! Qs::getPanelOptions() !!}
         </div>
 
-        <div class="card-body">
+        <div class="card-body overflow-x-auto">
 
-            <table id="promotions-list" class="table datatable-button-html5-columns">
+            <table id="promotions-list" class="table w-full">
                 <thead>
                 <tr>
                     <th>S/N</th>

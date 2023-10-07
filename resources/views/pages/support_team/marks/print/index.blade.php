@@ -21,8 +21,8 @@
                     <img src="{{ $sr->user->photo }}" alt="..."  width="100" height="100">
                 </div>
             </div>
-            <div class="">
-                <p class="p-3 mb-0 text-center bg-dark bg-gradient text-white fs-3 fw-semibold">{{Mk::reportTypeName($ex->marking_period_id)}} REPORT</p>
+            <div style="background-color:#1b0c80;">
+                <p class="p-2 mb-0 text-center text-white fs-3 fw-semibold">{{Mk::reportTypeName($ex->marking_period_id)}} REPORT</p>
             </div>
 
             <table class="table table-bordered m-0">

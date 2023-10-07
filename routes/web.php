@@ -20,15 +20,12 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::group(['prefix' => 'setup'], function()
     {
-        Route::group(['middleware'=>'teamSA'], function(){
-            Route::get('status','setupController@status')->name('setup.status');
+        Route::group(['middleware'=>['teamSA','setup_status']], function(){
             Route::get('marking-period','setupController@marking_period')->name('setup.marking-period');
             Route::get('calendar','setupController@calendar')->name('setup.calendar');
             Route::get('periods','setupController@periods')->name('setup.periods');
             Route::get('grade-levels','setupController@grade_levels')->name('setup.grade-levels');
             Route::get('classrooms','setupController@classrooms')->name('setup.classrooms');
-            Route::get('change-school/{school_id}','setupController@change_school_active')->name('setup.change-school');
-            Route::get('change-academic-year/{academic_year_id}','setupController@change_academic_year_active')->name('setup.change-academic-year-active');
             Route::get('ajax/getSemesterQuarters/{sem_id}','setupController@get_semester_quarters')->name('setup.get-semester-quarters');
             Route::get('ajax/marking-period/{mp_id}','setupController@getMarkingPeriod');
             Route::post('edit_marking_period','setupController@MarkingPeriodEdit')->name('setup.edit-marking-period');
@@ -36,7 +33,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('class-periods/new','setupController@addClassPeriod')->name('setup.class-periods');
             Route::post('class-periods/update/{period_id}','setupController@updateClassPeriod');
             Route::delete('class-periods/delete/{period_id}','setupController@deleteClassPeriod');
-            Route::post('grade-levels/add','setupController@addGradeLevels');
+            Route::post('grade-levels/add','setupController@addGradeLevels')->name('setup.grade-levels-add');
             Route::post('grade-levels/update/{grade_id}','setupController@updateGradeLevels');
             Route::post('grade-levels/delete/{grade_id}','setupController@deleteGradeLevels');
             Route::post('classrooms/add','setupController@addClassrooms');
@@ -56,6 +53,10 @@ Route::group(['middleware' => 'auth'], function () {
                 Route::post('update_school_preference/{key}/{value}','setupController@update_school_preference')->name('setup.schools.update_preference');
             });
         });
+        Route::get('status','setupController@status')->name('setup.status')->middleware('teamSA');
+        Route::get('change-school/{school_id}','setupController@change_school_active')->name('setup.change-school');
+        Route::get('change-academic-year/{academic_year_id}','setupController@change_academic_year_active')->name('setup.change-academic-year-active');
+
     });
 
     Route::group(['prefix' => 'my_account'], function() {
@@ -89,7 +90,7 @@ Route::group(['middleware' => 'auth'], function () {
 
         /*************** Users *****************/
         Route::group(['prefix' => 'users'], function(){
-            Route::get('reset_pass/{id}', 'UserController@reset_pass')->name('users.reset_pass');
+            Route::get('reset_pass/{user_id}', 'UserController@reset_pass')->name('users.reset_pass');
         });
 
         /*************** TimeTables *****************/
@@ -155,41 +156,53 @@ Route::group(['middleware' => 'auth'], function () {
 
         /*************** Marks *****************/
         Route::group(['prefix' => 'marks'], function(){
+            Route::group(['middleware'=>['mark_status']],function(){
 
-           // FOR teamSA
-            Route::group(['middleware' => 'teamSA'], function(){
-                Route::get('batch_fix', 'MarkController@batch_fix')->name('marks.batch_fix');
-                Route::put('batch_update', 'MarkController@batch_update')->name('marks.batch_update');
-                Route::get('tabulation/{exam?}/{class?}/{sec_id?}', 'MarkController@tabulation')->name('marks.tabulation');
-                Route::post('tabulation', 'MarkController@tabulation_select')->name('marks.tabulation_select');
-                Route::get('tabulation/print/{exam}/{class}/{sec_id}', 'MarkController@print_tabulation')->name('marks.print_tabulation');
-            });
+                // FOR teamSA
+                    Route::group(['middleware' => 'teamSA'], function(){
+                        Route::get('batch_fix', 'MarkController@batch_fix')->name('marks.batch_fix');
+                        Route::put('batch_update', 'MarkController@batch_update')->name('marks.batch_update');
+                        Route::get('tabulation/{exam?}/{class?}/{sec_id?}', 'MarkController@tabulation')->name('marks.tabulation');
+                        Route::post('tabulation', 'MarkController@tabulation_select')->name('marks.tabulation_select');
+                        Route::get('tabulation/print/{exam}/{class}/{sec_id}', 'MarkController@print_tabulation')->name('marks.print_tabulation');
+                    });
 
-            // FOR teamSAT
-            Route::group(['middleware' => 'teamSAT'], function(){
-                Route::get('/', 'MarkController@index')->name('marks.index');
-                Route::get('manage/{exam}/{class}/{section}/{subject}', 'MarkController@manage')->name('marks.manage');
-                Route::put('update/{exam}/{class}/{section}/{subject}', 'MarkController@update')->name('marks.update');
-                Route::put('comment_update/{exr_id}', 'MarkController@comment_update')->name('marks.comment_update');
-                Route::put('skills_update/{skill}/{exr_id}', 'MarkController@skills_update')->name('marks.skills_update');
-                Route::post('selector', 'MarkController@selector')->name('marks.selector');
-                Route::get('bulk/{class?}/{section?}', 'MarkController@bulk')->name('marks.bulk');
-                Route::post('bulk', 'MarkController@bulk_select')->name('marks.bulk_select');
-                Route::group(['prefix'=>'setup'],function(){
-                    Route::get('manage-skills','MarkController@manageSkills')->name('marks.setup.manage-skills');
-                    Route::get('preferences/{marking_period_id?}','markController@preferences')->name('marks.setup.preferences');
-                    Route::post('preferences-select','markController@preferences_select')->name('marks.setup.preferences-select');
-                    Route::post('update-preferences/{marking_period_id?}','markController@preferences_update')->name('marks.setup.preferences-update');
-                    Route::post('update/{skill_id}','markController@updateSkill');
-                    Route::post('delete/{skill_id}','markController@deleteSkill');
-                    Route::post('add-skill','markController@addSkill');
-                });
+                    // FOR teamSAT
+                    Route::group(['middleware' => 'teamSAT'], function(){
+                        Route::get('/', 'MarkController@index')->name('marks.index');
+                        Route::get('manage/{exam}/{class}/{section}/{subject}', 'MarkController@manage')->name('marks.manage');
+                        Route::put('update/{exam}/{class}/{section}/{subject}', 'MarkController@update')->name('marks.update');
+                        Route::put('comment_update/{exr_id}', 'MarkController@comment_update')->name('marks.comment_update');
+                        Route::put('skills_update/{skill}/{exr_id}', 'MarkController@skills_update')->name('marks.skills_update');
+                        Route::post('selector', 'MarkController@selector')->name('marks.selector');
+                        Route::get('bulk/{class?}/{section?}', 'MarkController@bulk')->name('marks.bulk');
+                        Route::post('bulk', 'MarkController@bulk_select')->name('marks.bulk_select');
+                        Route::group(['prefix'=>'setup'],function(){
+                            Route::get('manage-skills','MarkController@manageSkills')->name('marks.setup.manage-skills');
+                            Route::get('preferences/{marking_period_id?}','markController@preferences')->name('marks.setup.preferences');
+                            Route::post('preferences-select','markController@preferences_select')->name('marks.setup.preferences-select');
+                            Route::post('update-preferences/{marking_period_id?}','markController@preferences_update')->name('marks.setup.preferences-update');
+                            Route::post('update/{skill_id}','markController@updateSkill');
+                            Route::post('delete/{skill_id}','markController@deleteSkill');
+                            Route::post('skill-type/update/{skill_type_id}','markController@updateSkillType');
+                            Route::post('skill-type/delete/{skill_type_id}','markController@deleteSkillType');
+                            Route::post('add-skill','markController@addSkill')->name('marks.setup.add-skill');
+                            Route::post('add-skill-type','markController@addSkillType');
+                            Route::get('manage-skills-type','MarkController@manageSkillsType')->name('marks.setup.manage-skills-type');
+                            Route::get('remarks','MarkController@manageRemarks')->name('marks.setup.manage-remarks');
+                            Route::post('add-remark','MarkController@addRemark')->name('marks.setup.add-remark');
+                            Route::post('remark/update/{remark_id}','MarkController@updateRemark');
+                            Route::post('remark/delete/{remark_id}','MarkController@deleteRemark');
+                        });
+                    });
+                    // for general users
+                    Route::get('select_year/{student_id}', 'MarkController@year_selector')->name('marks.year_selector');
+                    Route::post('select_year/{student_id}', 'MarkController@year_selected')->name('marks.year_select');
+                    Route::get('show/{student_id}/{year}', 'MarkController@show')->name('marks.show');
+                    Route::get('print/{student_id}/{exam_id}/{year}', 'MarkController@print_view')->name('marks.print');
             });
-            // for general users
-            Route::get('select_year/{id}', 'MarkController@year_selector')->name('marks.year_selector');
-            Route::post('select_year/{id}', 'MarkController@year_selected')->name('marks.year_select');
-            Route::get('show/{id}/{year}', 'MarkController@show')->name('marks.show');
-            Route::get('print/{id}/{exam_id}/{year}', 'MarkController@print_view')->name('marks.print');
+            Route::get('status','MarkController@status')->name('marks.status');
+
         });
 
         Route::group(['prefix'=>'resource'],function(){

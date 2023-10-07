@@ -6,6 +6,7 @@ use App\Models\AcademicCalendar;
 use App\Models\School;
 use App\Models\system_preferences;
 use Qs;
+use Session;
 
 class SchoolRepo {
     public function createRecord ($data){
@@ -59,6 +60,7 @@ class SchoolRepo {
             return;
         }
         // set session variable 'selected_school'
+        Session::remove('selected_calendar');
         session(['selected_school'=>$id]);
     }
 

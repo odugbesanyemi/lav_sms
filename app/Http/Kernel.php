@@ -69,5 +69,8 @@ class Kernel extends HttpKernel
         'teamAccount' => \App\Http\Middleware\Custom\TeamAccount::class,
         'examIsLocked' => \App\Http\Middleware\Custom\ExamIsLocked::class,
         'my_parent' => \App\Http\Middleware\Custom\MyParent::class,
+        'setup_status' => \App\Http\Middleware\Custom\SetupStatus::class,
+        'mark_status' => \App\Http\Middleware\Custom\MarkStatus::class
+
     ];
 }

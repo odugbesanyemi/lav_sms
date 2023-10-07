@@ -12,11 +12,8 @@
     @include('partials.login.inc_top')
 </head>
 
-<body class="">
-@include('partials.login.header')
+<body class="" style="background-image: url('../../global_assets/images/backgrounds/v904-nunny-012_2.jpg');background-size: cover;display:block;">
 @yield('content')
-@include('partials.login.footer')
-
 </body>
 
 </html>

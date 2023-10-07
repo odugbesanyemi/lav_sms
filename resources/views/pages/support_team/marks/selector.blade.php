@@ -60,7 +60,7 @@
 
             <div class="">
                 <div class="">
-                    <button type="submit" class="btn btn-primary">Manage Marks <i class="icon-paperplane ml-2"></i></button>
+                    <button type="submit" class="text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2  focus:outline-none flex items-center">Manage Marks <i class="icon-paperplane ml-2 flex"></i></button>
                 </div>
             </div>
 

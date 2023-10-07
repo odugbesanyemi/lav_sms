@@ -30,7 +30,7 @@
 
 </style>
 <div class="space-y-3">
-    <div class="bg-white rounded-md shadow border-green-200 border-2 overflow-hidden" id="mp_view">
+    <div class="bg-white rounded-md border-green-200 border-2 overflow-hidden" id="mp_view">
         <div class="px-3 border-b-2 bg-gradient-to-b from-green-400 to-green-500 text-green-50 border-b-green-200 header-elements-inline py-3">
             <h6 class="card-title" id="titleDisplay"> </h6>
             {!! Qs::getPanelOptions() !!}
@@ -105,7 +105,7 @@
             </div>
         </div>
     </div>
-    <div class="bg-white rounded-md shadow border-blue-200 border-2 overflow-hidden" id="mp_edit_view">
+    <div class="bg-white rounded-md border-blue-200 border-2 overflow-hidden" id="mp_edit_view">
         <div class="px-3 border-b-2 bg-gradient-to-b from-blue-400 to-blue-500 text-blue-50 border-b-blue-200 header-elements-inline py-3">
             <h6 class="card-title" id="editTitleDisplay"> </h6>
             {!! Qs::getPanelOptions() !!}
@@ -183,7 +183,7 @@
     </div>
     <div class="mp_view gap-3 grid md:grid-cols-2" >
         <div class="">
-            <div class="bg-white rounded-md shadow border-red-200 border-2 overflow-hidden">
+            <div class="bg-white rounded-md border-red-200 border-2 overflow-hidden">
                 <div class="px-3 text-secondary border-b-2 bg-gradient-to-b from-red-400 to-red-500 text-red-50 border-b-red-200 header-elements-inline py-3">
                     <h6 class="card-title text-white">SEMESTER </h6>
                     {!! Qs::getPanelOptions() !!}
@@ -212,7 +212,7 @@
         </div>
 
         <div class="" id="mp_quarter_view">
-            <div class="bg-white rounded-md shadow border-indigo-200 border-2 overflow-hidden">
+            <div class="bg-white rounded-md border-indigo-200 border-2 overflow-hidden">
                 <div class="px-3 text-secondary border-b-2 bg-gradient-to-b from-indigo-400 to-indigo-500 text-indigo-50 border-b-indigo-200 header-elements-inline py-3">
                     <h6 class="card-title text-indigo-50" id="quarterTitle"> </h6>
                     {!! Qs::getPanelOptions() !!}

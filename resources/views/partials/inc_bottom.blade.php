@@ -40,8 +40,8 @@
 <script src="{{ asset('global_assets/js/demo_pages/form_select2.js?v=1.0') }}"></script>
 <script src="{{ asset('global_assets/js/demo_pages/datatables_extension_buttons_html5.js?v=1.0') }}"></script>
 <script src="{{ asset('global_assets/js/demo_pages/uploader_bootstrap.js?v=1.0') }}"></script>
-<script src="{{ asset('global_assets/js/demo_pages/fullcalendar_basic.js?v=1.0') }}"></script>
-<script src="https://cdn.quilljs.com/1.3.6/quill.js?v=1.0"></script>
+<!-- <script src="{{ asset('global_assets/js/demo_pages/fullcalendar_basic.js?v=1.0') }}"></script> -->
+<!-- <script src="https://cdn.quilljs.com/1.3.6/quill.js?v=1.0"></script> -->
 <!-- <script src="{{ asset('global_assets/js/plugins/ui/ripple.min.js') }}"></script> -->
 
 <!-- /theme JS files -->

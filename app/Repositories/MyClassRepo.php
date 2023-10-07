@@ -139,7 +139,7 @@ class MyClassRepo
 
     public function getAllSubjects()
     {
-        return Subject::orderBy('name', 'asc')->with(['my_class', 'teacher'])->get();
+        return Subject::where('school_id',Qs::findActiveSchool()[0]->id)->orderBy('name', 'asc')->with(['my_class', 'teacher'])->get();
     }
 
 }

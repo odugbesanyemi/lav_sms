@@ -48,19 +48,21 @@
             // Handle the case where $count is zero to avoid division by zero
             $average = 0;
             return 0;
-        }          
+        }
     }
-  
+
 ?>
 
 <div class="sheet" id="resultInfo">
-    <div class="d-flex ">
+    <div class="d-flex border">
         <div class="w-100">
             <table align="center" class="table table-bordered align-middle text-center m-0 table-striped">
                 <thead>
-                    <tr class=""><th colspan="9" class="fs-3 fw-bold p-3 table-light">
-                        COGNITIVE DOMAIN
-                    </th></tr>
+                    <tr class="">
+                        <th colspan="9" class="fs-3 fw-bold p-2 table-light" style="background-color:#1b0c80; color:white;" >
+                            COGNITIVE DOMAIN
+                        </th>
+                    </tr>
                     <tr class="align-middle">
 
                         <th rowspan="3" class="fw-bold fs-2">SUBJECTS</th>
@@ -213,7 +215,7 @@
                         </tr>
                     </tbody>
                 </table>
-            </div>            
+            </div>
         @endif
 
     </div>

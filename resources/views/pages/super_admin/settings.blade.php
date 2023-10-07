@@ -19,10 +19,11 @@
                                 <input name="system_name" value="{{ $s['system_name'] }}" required type="text" class="form-control" placeholder="Name of School">
                             </div>
                         </div>
+                        {{--
                         <div class="form-group row">
                             <label for="current_session" class="col-lg-3 col-form-label font-weight-semibold">Current Session <span class="text-danger">*</span></label>
                             <div class="col-lg-9">
-                                <select data-placeholder="Choose..." required name="current_session" id="current_session" class="select-search form-control">
+                                <select data-placeholder="Choose..." name="current_session" id="current_session" class="select-search form-control">
                                     <option value=""></option>
                                     @for($y=date('Y', strtotime('- 3 years')); $y<=date('Y', strtotime('+ 1 years')); $y++)
                                         <option {{ ($s['current_session'] == (($y-=1).'-'.($y+=1))) ? 'selected' : '' }}>{{ ($y-=1).'-'.($y+=1) }}</option>
@@ -30,6 +31,7 @@
                                 </select>
                             </div>
                         </div>
+                         --}}
                         <div class="form-group row">
                             <label class="col-lg-3 col-form-label font-weight-semibold">School Acronym</label>
                             <div class="col-lg-9">
@@ -54,6 +56,8 @@
                                 <input required name="address" value="{{ $s['address'] }}" type="text" class="form-control" placeholder="School Address">
                             </div>
                         </div>
+                        {{--
+
                         <div class="form-group row">
                             <label class="col-lg-3 col-form-label font-weight-semibold">This Term Ends</label>
                             <div class="col-lg-6">
@@ -72,6 +76,7 @@
                                 <span class="font-weight-bold font-italic">M-D-Y or M/D/Y </span>
                             </div>
                         </div>
+                         --}}
                         <div class="form-group row">
                             <label for="lock_exam" class="col-lg-3 col-form-label font-weight-semibold">Lock Exam</label>
                             <div class="col-lg-3">

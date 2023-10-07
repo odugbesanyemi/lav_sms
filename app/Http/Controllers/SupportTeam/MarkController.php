@@ -12,7 +12,9 @@ use App\Repositories\MyClassRepo;
 use App\Http\Controllers\Controller;
 use App\Models\MarkingPeriods;
 use App\Models\MarkPreferences;
+use App\Models\Remarks;
 use App\Models\Skill;
+use App\Models\SkillType;
 use App\Repositories\StudentRepo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -53,18 +55,16 @@ class MarkController extends Controller
 
     public function year_selected(Request $req, $student_id)
     {
-
         if(!$this->verifyStudentExamYear($student_id, $req->year)){
             return $this->noStudentRecord();
         }
 
-        $student_id = Qs::hash($student_id);
-        return redirect()->route('marks.show', [$student_id, $req->year]);
+        $student_id = base64_decode($student_id);
+        return redirect()->route('marks.show', ['student_id' => $student_id, 'year' => $req->year]);
     }
 
     public function show($student_id, $year)
     {
-
         /* Prevent Other Students/Parents from viewing Result of others */
         if(Auth::user()->id != $student_id && !Qs::userIsTeamSAT() && !Qs::userIsMyChild($student_id, Auth::user()->id)){
             return redirect(route('dashboard'))->with('pop_error', __('msg.denied'));
@@ -78,9 +78,10 @@ class MarkController extends Controller
             }
         }
 
-        if(!$this->verifyStudentExamYear($student_id, $year)){
+        if(!$this->verifyStudentExamYear(base64_encode($student_id), $year)){
             return $this->noStudentRecord();
         }
+
         $wh = ['student_id' => $student_id, 'acad_year_id'=> $year];
         $d['marks'] = $this->exam->getMark($wh);
         unset($wh['acad_year_id']);
@@ -94,6 +95,7 @@ class MarkController extends Controller
         $d['year'] = $year;
         $d['student_id'] = $student_id;
         $d['skills'] = $this->exam->getSkillByClassType() ?: NULL;
+        $d['remarks'] = Remarks::where('school_id',Qs::findActiveSchool()[0]->id)->get();
         //$d['ct'] = $d['class_type']->code;
         //$d['mark_type'] = Qs::getMarkType($d['ct']);
 
@@ -114,8 +116,7 @@ class MarkController extends Controller
                 return redirect()->route('pins.enter', Qs::hash($student_id));
             }
         }
-
-        if(!$this->verifyStudentExamYear($student_id, $year)){
+        if(!$this->verifyStudentExamYear(base64_encode($student_id), $year)){
             return $this->noStudentRecord();
         }
 
@@ -428,13 +429,14 @@ class MarkController extends Controller
 
     protected function verifyStudentExamYear($student_id, $year = null)
     {
+        $student_id = base64_decode($student_id);
         $years_id = $this->exam->getExamYears($student_id);
         $student_exists = $this->student->exists($student_id);
 
         if(!$year){
             if($student_exists && $years_id->count() > 0)
             {
-                $d =['years' => $years_id, 'student_id' => Qs::hash($student_id),];
+                $d =['years' => $years_id, 'student_id' => base64_encode($student_id),];
 
                 return view('pages.support_team.marks.select_year', $d);
             }
@@ -457,20 +459,39 @@ class MarkController extends Controller
 
     public function manageSkills(){
         $d['skills'] = $this->exam->getSkillByClassType() ?: NULL;
+        $d['type'] = SkillType::all();
         return view('pages.support_team.marks.setup.manage-skills',$d);
+    }
+    public function manageSkillsType(){
+        $d['type'] = SkillType::all();
+        return view('pages.support_team.marks.setup.manage-skills-type',$d);
     }
     public function updateSkill(Request $req,$skill_id){
         $skill= Skill::find($skill_id);
         $skill->update($req->data);
         $skill->save();
     }
+    public function updateSkillType(Request $req,$skill_type_id){
+        $skillType= SkillType::find($skill_type_id);
+        $skillType->update($req->data);
+        $skillType->save();
+    }
     public function deleteSkill(Request $req,$skill_id){
         $skill= Skill::find($skill_id);
         $skill->delete();
         return back()->with('flash_success',__('msg.del_ok'));
     }
+    public function deleteSkillType(Request $req,$skill_type_id){
+        $skillType= SkillType::find($skill_type_id);
+        $skillType->delete();
+        return back()->with('flash_success',__('msg.del_ok'));
+    }
     public function addSkill(Request $req){
         Skill::create($req->all());
+        return back()->with('flash_success',__('msg.store_ok'));
+    }
+    public function addSkillType(Request $req){
+        SkillType::create($req->all());
         return back()->with('flash_success',__('msg.store_ok'));
     }
     public function preferences($marking_period_id = NULL){
@@ -510,4 +531,27 @@ class MarkController extends Controller
 
         return redirect()->route('marks.setup.preferences')->with('flash_success',__('msg.update_ok'));
     }
+    public function manageRemarks(){
+        $userType = $d['userType'] = ['teacher','principal'];
+        $d['remarks'] = Remarks::where('school_id',Qs::findActiveSchool()[0]->id)->with('grades')->get();
+        $d['grades'] = Mk::getGradeList(Qs::findActiveSchool()[0]->id);
+        return view('pages.support_team.marks.setup.manage-remarks',$d);
+    }
+    public function addRemark(Request $req){
+        Remarks::create($req->all());
+        return back()->with('flash_success',__('msg.store_ok'));
+    }
+    public function updateRemark(Request $req,$remark_id){
+        $remark= Remarks::find($remark_id);
+        $remark->update($req->data);
+        $remark->save();
+    }
+    public function deleteRemark(Request $req,$remark_id){
+        $remark= Remarks::find($remark_id);
+        $remark->delete();
+        return back()->with('flash_success',__('msg.del_ok'));
+    }
+    public function status(Request $req){
+        return view('pages.support_team.marks.status',['errorObject'=>$req['errorObject']]);
+    }    
 }

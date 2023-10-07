@@ -141,7 +141,6 @@ function getOrdinal($number) {
                 var data = {
                     [title]:value
                 }
-                console.log(data)
                 var csrfToken = $('meta[name="csrf-token"]').attr('content');
                 var url = `/marks/setup/update-preferences/${id}`
                 console.log(url)
